@@ -1,0 +1,317 @@
+@import "tailwindcss";
+
+/*
+  Palette — extracted verbatim from the previous site. No new hues: everything
+  below the nine base colours is a shade or opacity step of one of them.
+*/
+:root {
+  --navy: #0d1b2a;
+  --navy-mid: #162236;
+  --navy-light: #1e3352;
+  --ivory: #f5f0e8;
+  --ivory-warm: #ede8dc;
+  --ivory-deep: #d8d0bc;
+  --gold: #c9a96e;
+  --gold-dark: #a0783c;
+  --gold-light: #e0c48a;
+  /* gold-dark at 76% value: 5.5:1 on ivory, 5.1:1 on ivory-warm. Small text on light surfaces. */
+  --gold-ink: #7a5b2e;
+
+  /* Fixed derived scale (replaces ~40 ad-hoc rgba values). Ratios are worst case across the surface family. */
+  --on-dark: var(--ivory);
+  --on-dark-muted: rgb(245 240 232 / 0.72); /* ≥6.6:1 */
+  --on-dark-faint: rgb(245 240 232 / 0.56); /* ≥4.6:1 */
+  --on-light: var(--navy);
+  --on-light-muted: rgb(13 27 42 / 0.75); /* ≥6.9:1 */
+  --on-light-faint: rgb(13 27 42 / 0.64); /* ≥4.8:1 */
+  --line: rgb(245 240 232 / 0.12);
+  --line-strong: rgb(201 169 110 / 0.35);
+  --line-on-light: rgb(13 27 42 / 0.14);
+  --accent-wash: rgb(201 169 110 / 0.08);
+
+  /* Space the fixed timeline takes, so content never sits underneath it. */
+  --topbar-h: 3.5rem;
+  --timeline-h: 0px;
+  --rail-w: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --timeline-h: 6.25rem;
+    --rail-w: 0px;
+  }
+}
+
+/*
+  Fallback for the hero headline while its webfont loads. Measured: Bodoni Moda 500 sets
+  "Ahmed" / "Mobasher" 13–14% wider than Times New Roman, plus ~1% more at the 1x optical
+  size. 116% keeps the fallback a hair *wider* than the final text, so the first paint is
+  already the largest paint and the swap never registers as a later LCP or a shift.
+*/
+@font-face {
+  font-family: "Bodoni Hero Fallback";
+  src: local("Times New Roman");
+  size-adjust: 116%;
+  ascent-override: 97%;
+  descent-override: 34.5%;
+  line-gap-override: 0%;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-mid: var(--navy-mid);
+  --color-navy-light: var(--navy-light);
+  --color-ivory: var(--ivory);
+  --color-ivory-warm: var(--ivory-warm);
+  --color-ivory-deep: var(--ivory-deep);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-light: var(--gold-light);
+  --color-gold-ink: var(--gold-ink);
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-muted: var(--on-dark-muted);
+  --color-on-dark-faint: var(--on-dark-faint);
+  --color-on-light: var(--on-light);
+  --color-on-light-muted: var(--on-light-muted);
+  --color-on-light-faint: var(--on-light-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-on-light: var(--line-on-light);
+  --color-accent-wash: var(--accent-wash);
+
+  --font-display: var(--font-bodoni), "Bodoni 72", Didot, "Times New Roman", serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), Menlo, "Courier New", monospace;
+
+  --breakpoint-xs: 26rem;
+}
+
+@layer base {
+  html {
+    background: var(--navy);
+    color: var(--on-dark);
+    scroll-padding-top: var(--topbar-h);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    padding-bottom: var(--timeline-h);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--gold);
+    color: var(--navy);
+  }
+}
+
+@layer components {
+  /*
+    Display type. Bodoni Moda is only ever set at 40px and up, with the optical-size
+    axis following the rendered size. Anything below 40px uses .heading (Plex Sans
+    semibold) instead.
+  */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-optical-sizing: auto;
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    font-size: max(2.5rem, var(--display-size, 2.5rem));
+  }
+
+  /* Hero headline only: the preloaded subset first, the full family as backstop. */
+  .display-hero {
+    font-family: var(--font-bodoni-hero), "Bodoni Hero Fallback", var(--font-display);
+  }
+
+  /*
+    On 1x screens the large optical sizes draw hairlines thinner than a device pixel
+    (they barely change between opsz 36 and 96), so serifs and thin strokes grey out.
+    Pin a sturdier cut there; high-density screens keep the size-matched one.
+  */
+  @media (max-resolution: 1.49dppx) {
+    .display {
+      font-variation-settings: "opsz" 24;
+    }
+  }
+
+  .heading {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* Editor's chrome: timecode, slates, track labels, metadata. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 3rem;
+    padding: 0 1.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+  }
+
+  .btn-ghost {
+    border-color: rgb(245 240 232 / 0.4);
+    color: var(--ivory);
+  }
+  .btn-ghost:hover {
+    border-color: var(--ivory);
+    background: rgb(245 240 232 / 0.06);
+  }
+
+  /* Marketplace links: gold outline, brand mark in ivory. */
+  .btn-outline-gold {
+    border-color: var(--gold);
+    color: var(--ivory);
+  }
+  .btn-outline-gold:hover {
+    background: var(--accent-wash);
+    border-color: var(--gold-light);
+  }
+}
+
+/* Film grain + scanlines over everything, combined opacity under 4%. */
+.texture {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0 2px, var(--ivory) 2px 3px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .96 0 0 0 0 .94 0 0 0 0 .91 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Subtitle being keyed in. Text is always in the DOM; only its reveal is animated. */
+.keyed-line {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.keyed {
+  display: inline-block;
+}
+/* The caret sits on the wrapper so the reveal's clip-path doesn't hide it. */
+.keyed-line::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 0;
+  width: 0.5ch;
+  background: var(--gold-light);
+  opacity: 0;
+}
+
+@keyframes key-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes key-caret {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(var(--chars) * 1ch));
+    opacity: 0;
+  }
+}
+@keyframes rec-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes marker-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  12%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes marker-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .keyed {
+    animation: key-in calc(var(--chars) * 55ms) steps(var(--chars)) 600ms both;
+  }
+  .keyed-line::after {
+    animation: key-caret calc(var(--chars) * 55ms) steps(var(--chars)) 600ms both;
+  }
+  .rec-dot {
+    animation: rec-blink 1.6s steps(1) infinite;
+  }
+  .marker {
+    animation: marker-in 1.8s ease both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marker {
+    animation: marker-fade 1.8s linear both;
+  }
+}
