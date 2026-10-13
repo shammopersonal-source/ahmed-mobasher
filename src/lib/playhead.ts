@@ -23,6 +23,8 @@ const FPS = 24;
 const PX_PER_FRAME = 3;
 /** A section takes over once its top edge is this far up the viewport. */
 const HANDOVER = 0.35;
+/** Shortest a clip may be, as a fraction of the timeline. */
+const MIN_CLIP = 0.04;
 
 type Listener = (p: Playhead, layout: Layout) => void;
 
@@ -54,6 +56,12 @@ function measure() {
     prev = Math.max(prev, clamp01(top / maxScroll));
     return prev;
   });
+  // Keep every clip long enough to hit comfortably (≥24px on the shortest mobile rail),
+  // even when its section is short; earlier clips give up the space.
+  for (let i = starts.length - 1, end = 1; i > 0; i--) {
+    starts[i] = Math.min(starts[i], end - MIN_CLIP);
+    end = starts[i];
+  }
   layout = { starts, maxScroll };
 }
 

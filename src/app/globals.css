@@ -220,6 +220,79 @@
   visibility: hidden;
 }
 
+/*
+  J-cut (Story → Craft). The heading is never held back; only the panel under it (the
+  visuals) waits for the cut. The audio lead-in is the fixed cue bar (JCutCue).
+*/
+[data-transition="j-cut"][data-cut="pending"] > [data-visuals] {
+  visibility: hidden;
+}
+.jcut-cue {
+  visibility: hidden;
+}
+.jcut-cue[data-shown] {
+  visibility: visible;
+}
+
+/* Effects Inspector preview. Each effect is a layer that is simply there or not. */
+.fx-layer {
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Ungraded: flat and washed out, like log footage. */
+.fx-shot {
+  filter: grayscale(0.85) contrast(0.78) brightness(1.12);
+}
+.fx-preview[data-video] .fx-shot {
+  filter: contrast(1.1) saturate(1.2);
+}
+.fx-preview[data-video] .fx-grade,
+.fx-preview[data-video] .fx-bars,
+.fx-preview[data-design] .fx-grid,
+.fx-preview[data-development] .fx-markup,
+.fx-preview[data-robotics] .fx-trace {
+  visibility: visible;
+}
+.fx-grade {
+  background: linear-gradient(160deg, rgb(224 196 138 / 0.35), transparent 45%, rgb(13 27 42 / 0.6));
+  mix-blend-mode: soft-light;
+}
+.fx-bars::before,
+.fx-bars::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 7%;
+  background: var(--navy);
+}
+.fx-bars::before {
+  top: 0;
+}
+.fx-bars::after {
+  bottom: 0;
+}
+.fx-grid {
+  margin: 0 6%;
+  border-inline: 1px solid rgb(224 196 138 / 0.7);
+  background-image:
+    repeating-linear-gradient(to right, rgb(201 169 110 / 0.13) 0 calc(100% / 12 - 6px), transparent calc(100% / 12 - 6px) calc(100% / 12)),
+    repeating-linear-gradient(to bottom, transparent 0 calc(12.5% - 1px), rgb(224 196 138 / 0.35) calc(12.5% - 1px) 12.5%);
+}
+.fx-switch {
+  border-color: rgb(245 240 232 / 0.4);
+  color: var(--on-dark-muted);
+  text-decoration: line-through;
+}
+.fx-switch[aria-checked="true"] {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--navy);
+  text-decoration: none;
+}
+.fx-trace-line {
+  stroke-dasharray: 1;
+}
+
 /* The scene under the playhead. */
 .scene .playing-dot {
   opacity: 0.25;
@@ -292,6 +365,34 @@
     opacity: 0;
   }
 }
+@keyframes trace-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes pad-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes wave {
+  50% {
+    transform: scaleY(0.35);
+  }
+}
+@keyframes cue-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes rec-blink {
   50% {
     opacity: 0.25;
@@ -332,6 +433,21 @@
   .rec-dot {
     animation: rec-blink 1.6s steps(1) infinite;
   }
+  .fx-preview[data-robotics] .fx-trace-line {
+    animation: trace-draw 900ms ease-out calc(var(--i, 0) * 70ms) both;
+  }
+  .fx-preview[data-robotics] .fx-trace-pad {
+    animation: pad-in 200ms linear 900ms both;
+  }
+  .jcut-cue[data-shown] {
+    animation: cue-in 220ms ease-out both;
+  }
+  .jcut-cue[data-shown] .jcut-bar {
+    animation: wave 900ms ease-in-out calc(var(--i) * -100ms) infinite;
+  }
+  [data-transition="j-cut"][data-cut="in"] > [data-visuals] {
+    animation: fade-in 120ms linear both;
+  }
   .marker {
     animation: marker-in 1.8s ease both;
   }
@@ -340,6 +456,10 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .jcut-cue[data-shown],
+  [data-transition="j-cut"][data-cut="in"] > [data-visuals] {
+    animation: fade-in 300ms linear both;
   }
   /* Cuts become a plain fade. */
   [data-transition="hard-cut"] {

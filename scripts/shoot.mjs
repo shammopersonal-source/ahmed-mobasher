@@ -1,5 +1,5 @@
 // Review screenshots through Chrome's DevTools protocol (no dependencies).
-// usage: node scripts/shoot.mjs <url> <out.png> <width> <height> <dpr> [--mobile] [--reduced-motion] [--no-js] [--scroll=0.5] [--to=elementId] [--by=px] [--wait=ms] [--clip=x,y,w,h]
+// usage: node scripts/shoot.mjs <url> <out.png> <width> <height> <dpr> [--mobile] [--reduced-motion] [--no-js] [--scroll=0.5] [--to=elementId] [--by=px] [--click=id1,id2] [--wait=ms] [--clip=x,y,w,h]
 import { spawn } from "node:child_process";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -42,6 +42,10 @@ if (flag("scroll")) {
 if (flag("to")) {
   await send("Runtime.evaluate", { expression: `document.getElementById(${JSON.stringify(flag("to"))}).scrollIntoView({behavior:"instant",block:"start"}); window.scrollBy({top:${+(flag("by") ?? 0)},behavior:"instant"})` });
   await sleep(+(flag("settle") ?? 500));
+}
+if (flag("click")) {
+  for (const target of flag("click").split(",")) await send("Runtime.evaluate", { expression: `document.getElementById(${JSON.stringify(target)}).click()` });
+  await sleep(1400);
 }
 const clip = flag("clip")?.split(",").map(Number);
 const shot = await send("Page.captureScreenshot", { format: "png", ...(clip ? { clip: { x: clip[0], y: clip[1], width: clip[2], height: clip[3], scale: 1 } } : {}) });
