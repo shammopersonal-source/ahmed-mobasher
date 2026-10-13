@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import subsetFont from "subset-font";
 
-const SOURCE = "src/fonts/BodoniModa-latin-source.woff2"; // Google Fonts latin subset, OFL 1.1
+const SOURCE = "src/fonts/BodoniModa-latin.woff2"; // Google Fonts latin subset, OFL 1.1
 const OUT = "src/fonts/BodoniModa-hero.woff2";
 const WEIGHT = 500; // matches .display
 

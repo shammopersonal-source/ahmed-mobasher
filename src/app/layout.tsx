@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { site } from "@/content/site";
 import "./globals.css";
 
+// All fonts are self-hosted Latin subsets (see src/fonts/README.md).
+
 // The hero headline is the LCP element, so it gets its own 3 KB cut of Bodoni Moda (just
 // the letters of the name, see scripts/subset-hero-font.mjs), preloaded, with a
-// hand-tuned Times fallback (see "Bodoni Hero Fallback" in globals.css; next/font can't derive
-// one from an 11-glyph subset). The full family is not preloaded: nothing above the fold needs it.
+// hand-tuned Times fallback ("Bodoni Hero Fallback" in globals.css; next/font can't derive
+// one from an 11-glyph subset).
 const bodoniHero = localFont({
   src: "../fonts/BodoniModa-hero.woff2",
   weight: "500",
@@ -16,12 +17,26 @@ const bodoniHero = localFont({
   adjustFontFallback: false,
   variable: "--font-bodoni-hero",
 });
-const bodoni = Bodoni_Moda({ subsets: ["latin"], axes: ["opsz"], display: "swap", preload: false, variable: "--font-bodoni" });
-const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "600"], display: "swap", variable: "--font-plex-sans" });
-// Fall back to real monospace faces with the same 0.6em advance (not next/font's adjusted
-// Arial), so labels wrap identically before and after the webfont arrives.
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
+// Full Bodoni Moda with its optical-size axis. Not preloaded: nothing above the fold needs it.
+const bodoni = localFont({
+  src: "../fonts/BodoniModa-latin.woff2",
+  weight: "400 900",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: "Times New Roman",
+  variable: "--font-bodoni",
+});
+const plexSans = localFont({
+  src: "../fonts/IBMPlexSans-latin.woff2",
+  weight: "100 700",
+  display: "swap",
+  adjustFontFallback: "Arial",
+  variable: "--font-plex-sans",
+});
+// Fall back to real monospace faces with the same 0.6em advance, so labels wrap
+// identically before and after the webfont arrives.
+const plexMono = localFont({
+  src: "../fonts/IBMPlexMono-400-latin.woff2",
   weight: "400",
   display: "swap",
   adjustFontFallback: false,
