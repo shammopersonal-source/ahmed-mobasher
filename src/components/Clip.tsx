@@ -15,6 +15,8 @@ const SLOT = [
 type Props = {
   href: string;
   label: string;
+  /** Full accessible name, when the visible label is an abbreviation. */
+  name?: string;
   /** Row index of the labelled clip. */
   track: number;
   /** Rows that carry an unlabelled linked clip. */
@@ -29,7 +31,7 @@ type Props = {
  * One section on the timeline. The whole column is the link (a comfortable target);
  * the bars inside it are the visible clips.
  */
-export function Clip({ href, label, track, linked = [], year, active, onSelect }: Props) {
+export function Clip({ href, label, name, track, linked = [], year, active, onSelect }: Props) {
   const onClick = (e: MouseEvent) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
@@ -40,6 +42,8 @@ export function Clip({ href, label, track, linked = [], year, active, onSelect }
     <a
       href={href}
       draggable={false}
+      title={name !== label ? name : undefined}
+      aria-label={name !== label ? name : undefined}
       aria-current={active ? "true" : undefined}
       onClick={onClick}
       className="group grid h-full grid-cols-[repeat(4,3px)] justify-center gap-x-0.5 py-px md:grid-cols-1 md:grid-rows-[1.125rem_repeat(4,1rem)] md:justify-normal md:gap-x-0 md:gap-y-0.5 md:px-px md:py-0"

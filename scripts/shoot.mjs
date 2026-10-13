@@ -1,5 +1,5 @@
 // Review screenshots through Chrome's DevTools protocol (no dependencies).
-// usage: node scripts/shoot.mjs <url> <out.png> <width> <height> <dpr> [--mobile] [--reduced-motion] [--no-js] [--scroll=0.5] [--wait=ms] [--clip=x,y,w,h]
+// usage: node scripts/shoot.mjs <url> <out.png> <width> <height> <dpr> [--mobile] [--reduced-motion] [--no-js] [--scroll=0.5] [--to=elementId] [--by=px] [--wait=ms] [--clip=x,y,w,h]
 import { spawn } from "node:child_process";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -37,6 +37,10 @@ await send("Page.navigate", { url });
 await sleep(+(flag("wait") ?? 3500));
 if (flag("scroll")) {
   await send("Runtime.evaluate", { expression: `window.scrollTo({top:(document.documentElement.scrollHeight-innerHeight)*${+flag("scroll")},behavior:"instant"})` });
+  await sleep(+(flag("settle") ?? 500));
+}
+if (flag("to")) {
+  await send("Runtime.evaluate", { expression: `document.getElementById(${JSON.stringify(flag("to"))}).scrollIntoView({behavior:"instant",block:"start"}); window.scrollBy({top:${+(flag("by") ?? 0)},behavior:"instant"})` });
   await sleep(+(flag("settle") ?? 500));
 }
 const clip = flag("clip")?.split(",").map(Number);

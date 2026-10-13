@@ -3,7 +3,7 @@ import { INITIAL_TIMECODE } from "@/lib/playhead";
 
 export function TopBar() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex h-[var(--topbar-h)] items-center justify-between gap-4 border-b border-line bg-navy/90 px-4 backdrop-blur-sm md:px-6">
+    <header className="fixed inset-x-0 top-0 z-50 flex h-[var(--topbar-h)] items-center justify-between gap-4 border-b border-line bg-navy px-4 md:px-6">
       <div className="flex flex-col gap-0.5 md:flex-row md:items-baseline md:gap-3">
         <a href="#hero" className="heading text-[0.9375rem] whitespace-nowrap text-on-dark">
           {site.name}

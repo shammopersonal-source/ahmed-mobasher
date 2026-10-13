@@ -1,11 +1,11 @@
 // Scroll → playhead store shared by the Timeline and the TransitionController.
 // Progress is pushed imperatively (once per frame) so scrubbing never re-renders React.
-import { FINAL_YEAR, sections } from "@/content/sections";
+import { FINAL_YEAR, clips } from "@/content/sections";
 
 export type Playhead = {
   /** 0..1 across the whole page. */
   progress: number;
-  /** Index into `sections` of the clip under the playhead. */
+  /** Index into `clips` of the clip under the playhead. */
   active: number;
   year: number;
   /** Running frame count at 24fps, derived from scroll distance. */
@@ -25,8 +25,8 @@ const HANDOVER = 0.35;
 
 type Listener = (p: Playhead, layout: Layout) => void;
 
-let layout: Layout = { starts: sections.map((_, i) => i / sections.length), maxScroll: 1 };
-let state: Playhead = { progress: 0, active: 0, year: sections[0].year, frames: 0 };
+let layout: Layout = { starts: clips.map((_, i) => i / clips.length), maxScroll: 1 };
+let state: Playhead = { progress: 0, active: 0, year: clips[0].year, frames: 0 };
 const listeners = new Set<Listener>();
 let frame = 0;
 let attached = false;
@@ -36,8 +36,8 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 function measure() {
   const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
   let prev = 0;
-  const starts = sections.map((s, i) => {
-    const el = document.getElementById(s.id);
+  const starts = clips.map((c, i) => {
+    const el = document.getElementById(c.target);
     if (!el || i === 0) return 0;
     const top = el.getBoundingClientRect().top + window.scrollY - window.innerHeight * HANDOVER;
     prev = Math.max(prev, clamp01(top / maxScroll));
@@ -54,8 +54,8 @@ function read() {
   const start = layout.starts[active];
   const end = layout.starts[active + 1] ?? 1;
   const within = end > start ? (progress - start) / (end - start) : 0;
-  const nextYear = sections[active + 1]?.year ?? FINAL_YEAR;
-  const year = Math.min(FINAL_YEAR, Math.floor(sections[active].year + within * (nextYear - sections[active].year)));
+  const nextYear = clips[active + 1]?.year ?? FINAL_YEAR;
+  const year = Math.min(FINAL_YEAR, Math.floor(clips[active].year + within * (nextYear - clips[active].year)));
   state = { progress, active, year, frames: Math.round(window.scrollY / PX_PER_FRAME) };
   listeners.forEach((l) => l(state, layout));
 }
@@ -89,9 +89,9 @@ export function seek(progress: number) {
   window.scrollTo({ top: clamp01(progress) * layout.maxScroll, behavior: "instant" });
 }
 
-/** Jump: travel to a section, animated unless the visitor asked for less motion. */
+/** Jump: travel to a clip, animated unless the visitor asked for less motion. */
 export function jumpTo(index: number) {
-  const el = document.getElementById(sections[Math.min(sections.length - 1, Math.max(0, index))].id);
+  const el = document.getElementById(clips[Math.min(clips.length - 1, Math.max(0, index))].target);
   el?.scrollIntoView({ behavior: prefersReducedMotion() ? "instant" : "smooth", block: "start" });
 }
 
@@ -101,4 +101,4 @@ export function formatTimecode({ year, frames }: Pick<Playhead, "year" | "frames
   return `[${year}]:${pad(Math.floor(s / 60) % 100)}:${pad(s % 60)}:${pad(frames % FPS)}`;
 }
 
-export const INITIAL_TIMECODE = formatTimecode({ year: sections[0].year, frames: 0 });
+export const INITIAL_TIMECODE = formatTimecode({ year: clips[0].year, frames: 0 });

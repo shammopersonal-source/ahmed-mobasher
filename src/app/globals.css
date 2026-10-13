@@ -208,6 +208,36 @@
   }
 }
 
+/*
+  Hard cut (Hero → Story). Until the playhead reaches the section it holds the outgoing
+  shot's navy with nothing on it; on the beat it switches to its own frame in one step,
+  no easing. `data-cut` is only ever set by JS, so without it the section is simply visible.
+*/
+[data-transition="hard-cut"][data-cut="pending"] {
+  background: var(--navy);
+}
+[data-transition="hard-cut"][data-cut="pending"] > * {
+  visibility: hidden;
+}
+
+/* The scene under the playhead. */
+.scene .playing-dot {
+  opacity: 0.25;
+}
+.scene[data-playing] {
+  border-color: var(--gold-ink);
+}
+.scene[data-playing] .playing-dot {
+  opacity: 1;
+  color: var(--gold-ink);
+}
+.scene.bg-navy[data-playing] {
+  border-color: var(--gold);
+}
+.scene.bg-navy[data-playing] .playing-dot {
+  color: var(--gold-light);
+}
+
 /* Film grain + scanlines over everything, combined opacity under 4%. */
 .texture {
   position: fixed;
@@ -310,6 +340,17 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  /* Cuts become a plain fade. */
+  [data-transition="hard-cut"] {
+    transition: background-color 300ms linear;
+  }
+  [data-transition="hard-cut"] > * {
+    transition: opacity 300ms linear;
+  }
+  [data-transition="hard-cut"][data-cut="pending"] > * {
+    visibility: visible;
+    opacity: 0;
   }
   .marker {
     animation: marker-fade 1.8s linear both;

@@ -1,39 +1,60 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { sections, type SectionId } from "@/content/sections";
+import { clips, sections, type SectionId } from "@/content/sections";
 import { subscribe } from "@/lib/playhead";
 
-const ActiveSection = createContext<SectionId>(sections[0].id);
+type Edit = { section: SectionId; clip: string; hydrated: boolean };
+const EditContext = createContext<Edit>({ section: sections[0].id, clip: clips[0].id, hydrated: false });
 
-/** Which clip is under the playhead. Sections use this to run their entrance edit. */
-export const useActiveSection = () => useContext(ActiveSection);
+/** Id of the timeline clip under the playhead (a section, or a scene inside Story). */
+export const useActiveClip = () => useContext(EditContext).clip;
+
+/**
+ * Whether a section's entrance edit has happened yet: "pending" until the playhead first
+ * reaches it, "in" from then on. Undefined before hydration, so without JS every section
+ * is simply visible.
+ */
+export function useCut(id: SectionId): "pending" | "in" | undefined {
+  const { section, hydrated } = useContext(EditContext);
+  const index = sections.findIndex((s) => s.id === id);
+  const reached = sections.findIndex((s) => s.id === section) >= index;
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    if (reached) setSeen(true);
+  }, [reached]);
+  return hydrated ? (seen || reached ? "in" : "pending") : undefined;
+}
 
 /**
  * Owns the edit grammar: tracks the clip under the playhead and shows the editor's
- * marker naming each transition as the cut happens. Section-specific transition
- * visuals hook in through `useActiveSection`.
+ * marker naming each transition as the cut happens. Sections run their own entrance
+ * through `useCut`.
  */
 export function TransitionController({ children }: { children: ReactNode }) {
   const [active, setActive] = useState(0);
-  // Bumped on every cut so the marker replays even when the same label repeats.
+  const [hydrated, setHydrated] = useState(false);
+  // Bumped on every change of section so the marker replays.
   const [cut, setCut] = useState(0);
 
   useEffect(() => {
     let last = -1;
-    return subscribe((p) => {
+    const unsubscribe = subscribe((p) => {
       if (p.active === last) return;
-      const first = last === -1;
+      const changedSection = last !== -1 && clips[last].section !== clips[p.active].section;
       last = p.active;
       setActive(p.active);
-      if (!first) setCut((n) => n + 1);
+      setHydrated(true);
+      if (changedSection) setCut((n) => n + 1);
     });
+    return unsubscribe;
   }, []);
 
-  const transition = sections[active].transition;
+  const section = clips[active].section;
+  const transition = sections.find((s) => s.id === section)?.transition;
 
   return (
-    <ActiveSection.Provider value={sections[active].id}>
+    <EditContext.Provider value={{ section, clip: clips[active].id, hydrated }}>
       {children}
       {cut > 0 && transition ? (
         <div
@@ -45,6 +66,6 @@ export function TransitionController({ children }: { children: ReactNode }) {
           {transition}
         </div>
       ) : null}
-    </ActiveSection.Provider>
+    </EditContext.Provider>
   );
 }

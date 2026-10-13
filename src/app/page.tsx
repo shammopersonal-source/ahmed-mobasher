@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { Story } from "@/components/Story";
 import { PendingSection } from "@/components/PendingSection";
 import { Timeline } from "@/components/Timeline";
 import { TopBar } from "@/components/TopBar";
@@ -14,7 +15,7 @@ export default function Page() {
       <Timeline />
       <main className="pr-[var(--rail-w)]">
         <Hero />
-        <PendingSection id="story" slate="SC 02 — next in the cut" title="Rough Cut" note="The story, in six scenes: 2016 to Startup Solution." />
+        <Story />
         <PendingSection id="craft" slate="SC 03 — not yet cut" title="Effects Inspector" note="Video, design, development and robotics as switchable effects." />
         <PendingSection id="work" slate="SC 04 — not yet cut" title="Media Bin" note="Projects as clips, opening in a source monitor." />
         <PendingSection id="agency" slate="SC 05 — not yet cut" title="Render Output" note="Startup Solution, the next chapter." />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
-import { sections, tracks, type TrackId } from "@/content/sections";
+import { clips, tracks, type TrackId } from "@/content/sections";
 import { INITIAL_TIMECODE, formatTimecode, jumpTo, seek, subscribe, type Layout } from "@/lib/playhead";
 import { Clip } from "./Clip";
 
@@ -24,7 +24,7 @@ export function Timeline() {
 
   const [ready, setReady] = useState(false);
   const [active, setActive] = useState(0);
-  const [year, setYear] = useState(sections[0].year);
+  const [year, setYear] = useState(clips[0].year);
   const [scrubbing, setScrubbing] = useState(false);
 
   useEffect(() => {
@@ -129,16 +129,16 @@ export function Timeline() {
   };
 
   const go = (index: number) => {
-    const { id } = sections[index];
+    const { target } = clips[index];
     jumpTo(index);
-    history.replaceState(null, "", `#${id}`);
-    document.getElementById(id)?.focus({ preventScroll: true });
+    history.replaceState(null, "", `#${target}`);
+    document.getElementById(target)?.focus({ preventScroll: true });
   };
 
   return (
     <nav
       aria-label="Timeline"
-      className="fixed top-[var(--topbar-h)] right-0 bottom-0 z-50 w-[var(--rail-w)] border-l border-line bg-navy/95 select-none md:top-auto md:left-0 md:grid md:h-[var(--timeline-h)] md:w-auto md:grid-cols-[9.75rem_1fr] md:border-t md:border-l-0 md:py-2 md:pr-4"
+      className="fixed top-[var(--topbar-h)] right-0 bottom-0 z-50 w-[var(--rail-w)] border-l border-line bg-navy select-none md:top-auto md:left-0 md:grid md:h-[var(--timeline-h)] md:w-auto md:grid-cols-[9.75rem_1fr] md:border-t md:border-l-0 md:py-2 md:pr-4"
     >
       {/* Track header: timecode readout and track names. Desktop only. */}
       <div className="hidden grid-rows-[1.125rem_repeat(4,1rem)] gap-y-0.5 pl-4 md:grid" aria-hidden>
@@ -167,21 +167,22 @@ export function Timeline() {
         }}
       >
         <ol className="absolute inset-0">
-          {sections.map((s, i) => (
+          {clips.map((s, i) => (
             <li
               key={s.id}
               ref={(el) => {
                 items.current[i] = el;
               }}
-              style={{ "--s": i / sections.length, "--l": 1 / sections.length } as CSSProperties}
+              style={{ "--s": i / clips.length, "--l": 1 / clips.length } as CSSProperties}
               className="absolute inset-x-0 top-[calc(var(--s)*100%)] h-[calc(var(--l)*100%)] md:inset-x-auto md:inset-y-0 md:left-[calc(var(--s)*100%)] md:h-auto md:w-[calc(var(--l)*100%)]"
             >
               <Clip
-                href={`#${s.id}`}
+                href={`#${s.target}`}
                 label={s.label}
+                name={s.name}
                 track={trackIndex(s.track)}
                 linked={s.linked?.map(trackIndex)}
-                year={s.year !== sections[i - 1]?.year ? s.year : undefined}
+                year={s.year !== clips[i - 1]?.year ? s.year : undefined}
                 active={ready && i === active}
                 onSelect={() => go(i)}
               />
@@ -199,7 +200,7 @@ export function Timeline() {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={0}
-            aria-valuetext={`${sections[active].label}, ${year}`}
+            aria-valuetext={`${clips[active].name}, ${year}`}
             onKeyDown={onKeyDown}
             className="group absolute inset-x-0 top-0 -mt-3.5 flex h-7 cursor-grab touch-none items-center md:inset-x-auto md:inset-y-0 md:left-0 md:mt-0 md:-ml-3 md:h-auto md:w-6 md:cursor-ew-resize md:flex-col"
           >
@@ -211,7 +212,7 @@ export function Timeline() {
               className={`label absolute right-full mr-2 border border-line-strong bg-navy px-2 py-1.5 whitespace-nowrap text-gold-light transition-opacity md:hidden ${scrubbing ? "opacity-100" : "opacity-0"}`}
               aria-hidden
             >
-              {sections[active].label} · {year}
+              {clips[active].name.split(":")[0]} · {year}
             </span>
           </div>
         ) : null}
