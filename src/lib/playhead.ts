@@ -1,6 +1,7 @@
 // Scroll → playhead store shared by the Timeline and the TransitionController.
 // Progress is pushed imperatively (once per frame) so scrubbing never re-renders React.
-import { FINAL_YEAR, clips } from "@/content/sections";
+import { clips } from "@/content/sections";
+import { yearMarks } from "@/content/years";
 
 export type Playhead = {
   /** 0..1 across the whole page. */
@@ -26,7 +27,17 @@ const HANDOVER = 0.35;
 type Listener = (p: Playhead, layout: Layout) => void;
 
 let layout: Layout = { starts: clips.map((_, i) => i / clips.length), maxScroll: 1 };
-let state: Playhead = { progress: 0, active: 0, year: clips[0].year, frames: 0 };
+
+/** The last year the content gives at or before this point; held until the next one. */
+function yearAt(active: number, within: number) {
+  for (let i = active; i >= 0; i--) {
+    const marks = yearMarks[clips[i].id] ?? [];
+    for (let m = marks.length - 1; m >= 0; m--) if (i < active || marks[m].at <= within) return marks[m].year;
+  }
+  return yearMarks[clips[0].id][0].year;
+}
+
+let state: Playhead = { progress: 0, active: 0, year: yearAt(0, 0), frames: 0 };
 const listeners = new Set<Listener>();
 let frame = 0;
 let attached = false;
@@ -54,9 +65,7 @@ function read() {
   const start = layout.starts[active];
   const end = layout.starts[active + 1] ?? 1;
   const within = end > start ? (progress - start) / (end - start) : 0;
-  const nextYear = clips[active + 1]?.year ?? FINAL_YEAR;
-  const year = Math.min(FINAL_YEAR, Math.floor(clips[active].year + within * (nextYear - clips[active].year)));
-  state = { progress, active, year, frames: Math.round(window.scrollY / PX_PER_FRAME) };
+  state = { progress, active, year: yearAt(active, within), frames: Math.round(window.scrollY / PX_PER_FRAME) };
   listeners.forEach((l) => l(state, layout));
 }
 
@@ -101,4 +110,4 @@ export function formatTimecode({ year, frames }: Pick<Playhead, "year" | "frames
   return `[${year}]:${pad(Math.floor(s / 60) % 100)}:${pad(s % 60)}:${pad(frames % FPS)}`;
 }
 
-export const INITIAL_TIMECODE = formatTimecode({ year: clips[0].year, frames: 0 });
+export const INITIAL_TIMECODE = formatTimecode({ year: yearAt(0, 0), frames: 0 });

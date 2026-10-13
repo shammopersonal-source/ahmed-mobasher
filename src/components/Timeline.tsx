@@ -2,12 +2,19 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { clips, tracks, type TrackId } from "@/content/sections";
+import { yearMarks } from "@/content/years";
 import { INITIAL_TIMECODE, formatTimecode, jumpTo, seek, subscribe, type Layout } from "@/lib/playhead";
 import { Clip } from "./Clip";
 
 const DRAG_THRESHOLD = 5;
 const KEY_STEP = 0.02;
 const trackIndex = (id: TrackId) => tracks.findIndex((t) => t.id === id);
+// Ruler ticks: a year appears above the clip where the content first gives it.
+const ticks = clips.map((c, i) => {
+  const year = yearMarks[c.id]?.[0].year;
+  const previous = clips.slice(0, i).reverse().map((p) => yearMarks[p.id]?.at(-1)?.year).find(Boolean);
+  return year !== previous ? year : undefined;
+});
 
 /**
  * The master timeline: primary navigation. A horizontal sequence along the bottom
@@ -24,7 +31,7 @@ export function Timeline() {
 
   const [ready, setReady] = useState(false);
   const [active, setActive] = useState(0);
-  const [year, setYear] = useState(clips[0].year);
+  const [year, setYear] = useState(yearMarks[clips[0].id][0].year);
   const [scrubbing, setScrubbing] = useState(false);
 
   useEffect(() => {
@@ -182,7 +189,7 @@ export function Timeline() {
                 name={s.name}
                 track={trackIndex(s.track)}
                 linked={s.linked?.map(trackIndex)}
-                year={s.year !== clips[i - 1]?.year ? s.year : undefined}
+                year={ticks[i]}
                 active={ready && i === active}
                 onSelect={() => go(i)}
               />
