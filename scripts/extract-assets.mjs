@@ -50,6 +50,29 @@ const jobs = [
   ...Object.entries(LOOSE).map(([name, path]) => [name, readFileSync(path)]),
 ];
 
+// Variants derived from the images above.
+const NAVY = [13, 27, 42];
+const byName = Object.fromEntries(jobs);
+const derived = [];
+// The agency logo is drawn in white/grey for dark backgrounds. The dark version keeps its
+// shape and tonal hierarchy (white parts solid, grey parts lighter) but in navy, for the
+// cream sections.
+{
+  const { data, info } = await sharp(byName["startup-solution-logo"]).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  for (let i = 0; i < data.length; i += 4) {
+    const lum = (data[i] + data[i + 1] + data[i + 2]) / 765;
+    data[i + 3] = Math.round(data[i + 3] * (0.55 + 0.45 * lum)); // grey parts stay distinct but read clearly on cream
+    [data[i], data[i + 1], data[i + 2]] = NAVY;
+  }
+  derived.push(["startup-solution-logo-dark", await sharp(data, { raw: info }).png().toBuffer()]);
+}
+// Small certificate previews for the credits list (the viewer uses the full size).
+const THUMB_W = 480;
+for (const [name, buf] of jobs.filter(([n]) => n.startsWith("cert-"))) {
+  derived.push([`${name}-thumb`, await sharp(buf).resize({ width: THUMB_W, withoutEnlargement: true }).toBuffer()]);
+}
+jobs.push(...derived);
+
 const manifest = {};
 let total = 0;
 for (const [name, buf] of jobs) {

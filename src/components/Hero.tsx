@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { site } from "@/content/site";
 import { INITIAL_TIMECODE } from "@/lib/playhead";
 import { ArrowDownIcon, FiverrIcon, PlayIcon, UpworkIcon } from "./icons";
-import { Picture } from "./Picture";
+import { HeroShot } from "./HeroShot";
 
 const corner = "absolute h-3.5 w-3.5 border-gold";
 
@@ -79,12 +79,7 @@ export function Hero() {
           {/* The shot, with the tagline keyed in as its subtitle and the stats as clip metadata */}
           <div className="flex flex-col md:col-span-5">
             <figure className="relative flex min-h-64 flex-1 items-end justify-center overflow-hidden border border-line bg-linear-to-b from-navy-light to-navy-mid">
-              <Picture
-                name="portrait-3"
-                alt="Ahmed Mobasher, arms crossed, smiling"
-                priority
-                className="absolute bottom-0 left-1/2 h-[94%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom"
-              />
+              <HeroShot />
               <figcaption className="relative mb-4 bg-navy/85 px-3 py-1.5 font-mono text-[0.8125rem] text-ivory md:mb-6 md:text-sm">
                 <span className="keyed-line" style={{ "--chars": site.tagline.length } as CSSProperties}>
                   <span className="keyed">{site.tagline}</span>

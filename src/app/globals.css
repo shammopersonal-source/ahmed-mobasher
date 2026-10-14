@@ -311,6 +311,19 @@ html:has(dialog[open]) {
   transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+/* Hero slideshow: shots cross-fade (a plain cut under reduced motion). */
+.hero-shot {
+  opacity: 0;
+}
+.hero-shot[data-on] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-shot {
+    transition: opacity 900ms ease;
+  }
+}
+
 /* Effects Inspector preview. Each effect is a layer that is simply there or not. */
 .fx-layer {
   visibility: hidden;

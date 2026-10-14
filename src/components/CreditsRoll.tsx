@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { assets } from "@/content/assets.generated";
+import { assets, type AssetName } from "@/content/assets.generated";
 import { certificates, type Certificate } from "@/content/certificates";
 import { CloseIcon } from "./icons";
 import { Picture } from "./Picture";
@@ -36,12 +36,21 @@ export function CreditsRoll() {
               href={cert.image ? assets[cert.image].webp : `#credit-${cert.id}`}
               onClick={select(cert)}
               aria-haspopup="dialog"
-              className="group grid gap-1 py-5 text-center md:grid-cols-[1fr_auto_1fr] md:items-baseline md:gap-8 md:text-left"
+              className="group grid justify-items-center gap-3 py-6 text-center md:grid-cols-[1fr_15rem_1fr] md:items-center md:justify-items-stretch md:gap-8 md:text-left"
             >
               <span className="label text-on-dark-faint md:text-right">
                 {cert.kind} · {cert.year}
               </span>
-              <span className="hidden h-px w-10 self-center bg-line-strong md:block" aria-hidden />
+              {cert.image ? (
+                <span className="block w-full max-w-72 border border-line bg-navy-mid p-1.5 transition-colors group-hover:border-gold md:max-w-none">
+                  <Picture name={`${cert.image}-thumb` as AssetName} alt="" className="h-auto w-full" />
+                </span>
+              ) : (
+                <span className="flex aspect-[1.414] w-full max-w-72 flex-col items-center justify-center gap-2 border border-line bg-ivory p-4 text-center text-on-light md:max-w-none" aria-hidden>
+                  <span className="label text-[0.625rem] text-gold-ink">Certificate</span>
+                  <span className="heading text-sm">{cert.title}</span>
+                </span>
+              )}
               <span>
                 <span className="heading block text-lg text-on-dark group-hover:text-gold-light md:text-xl">{cert.title}</span>
                 <span className="mt-1 block text-on-dark-muted">{cert.issuer}</span>
