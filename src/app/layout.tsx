@@ -51,8 +51,16 @@ export const metadata: Metadata = {
   title,
   description: site.description,
   alternates: { canonical: "/" },
-  openGraph: { type: "profile", url: site.url, siteName: site.name, title, description: site.description, locale: "en_US" },
-  twitter: { card: "summary_large_image", title, description: site.description },
+  openGraph: {
+    type: "profile",
+    url: site.url,
+    siteName: site.name,
+    title,
+    description: site.description,
+    locale: "en_US",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: `${site.name} — ${site.tagline}` }],
+  },
+  twitter: { card: "summary_large_image", title, description: site.description, images: ["/og.png"] },
 };
 
 export const viewport: Viewport = { themeColor: "#0d1b2a", colorScheme: "dark" };
@@ -88,7 +96,11 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bodoniHero.variable} ${bodoni.variable} ${plexSans.variable} ${plexMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${bodoniHero.variable} ${bodoni.variable} ${plexSans.variable} ${plexMono.variable}`}>
+      <head>
+        {/* Lets CSS tell "JS is running" apart from no-JS before React loads (see .nojs-only). */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>
         {children}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

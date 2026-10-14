@@ -42,6 +42,7 @@ export function Clip({ href, label, name, track, linked = [], year, active, onSe
     <a
       href={href}
       draggable={false}
+      data-razor
       title={name !== label ? name : undefined}
       aria-label={name !== label ? name : undefined}
       aria-current={active ? "true" : undefined}

@@ -216,8 +216,9 @@
 [data-transition="hard-cut"][data-cut="pending"] {
   background: var(--navy);
 }
+/* opacity, not visibility: hidden content must stay focusable, or keyboard users would tab straight past it. */
 [data-transition="hard-cut"][data-cut="pending"] > * {
-  visibility: hidden;
+  opacity: 0;
 }
 
 /*
@@ -225,13 +226,89 @@
   visuals) waits for the cut. The audio lead-in is the fixed cue bar (JCutCue).
 */
 [data-transition="j-cut"][data-cut="pending"] > [data-visuals] {
-  visibility: hidden;
+  opacity: 0;
 }
 .jcut-cue {
   visibility: hidden;
 }
 .jcut-cue[data-shown] {
   visibility: visible;
+}
+
+/* Visuals that wait for their section's cut (every transition except the hard cut, which hides everything). */
+[data-cut="pending"]:not([data-transition="hard-cut"]) [data-visuals] {
+  opacity: 0;
+}
+
+/* Cross dissolve (Agency → Reviews): the outgoing ivory frame dissolves into this one. */
+[data-transition="cross-dissolve"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--ivory);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+[data-transition="cross-dissolve"][data-cut="pending"]::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* JS-only and no-JS-only content. `html.js` is set by an inline script before paint. */
+.js .nojs-only {
+  display: none;
+}
+html:not(.js) .js-only {
+  display: none;
+}
+/* With JS, list excerpts clamp (the viewer shows the full note); without it they don't. */
+.js .note-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Razor tool over clips, on devices with a real pointer only. */
+@media (hover: hover) and (pointer: fine) {
+  [data-razor] {
+    cursor: url("/cursors/razor.svg") 6 16, pointer;
+  }
+}
+
+/* Modal dialogs: no page scroll behind them. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Match cut shape: the frame that travels from the inspector to the featured clip. */
+.match-shape {
+  position: fixed;
+  z-index: 45;
+  pointer-events: none;
+  border: 2px solid var(--gold-light);
+  box-shadow: 0 0 0 1px var(--navy);
+  transform-origin: 0 0;
+}
+
+/* Agency render: the frame is revealed by the render's scan line. */
+.render-frame[data-rendering] > * {
+  clip-path: inset(0 var(--reveal) 0 0);
+}
+.render-frame[data-rendering]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: var(--reveal);
+  width: 2px;
+  background: var(--gold-ink);
+}
+
+.export-bar {
+  transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 /* Effects Inspector preview. Each effect is a layer that is simply there or not. */
@@ -393,6 +470,53 @@
     opacity: 0;
   }
 }
+@keyframes whip-in {
+  from {
+    transform: translateX(45%);
+    filter: blur(14px);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+}
+@keyframes dissolve-out {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: visible;
+  }
+}
+@keyframes roll-up {
+  from {
+    transform: translateY(3rem);
+    opacity: 0;
+  }
+}
+@keyframes smash {
+  0%,
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes appear-late {
+  0%,
+  99% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
 @keyframes rec-blink {
   50% {
     opacity: 0.25;
@@ -448,6 +572,31 @@
   [data-transition="j-cut"][data-cut="in"] > [data-visuals] {
     animation: fade-in 120ms linear both;
   }
+  /* Match cut: the bin shows once the travelling frame has landed. */
+  [data-transition="match-cut"][data-cut="in"] [data-visuals] {
+    animation: fade-in 200ms linear 480ms both;
+  }
+  [data-transition="whip-pan"][data-cut="in"] [data-visuals] {
+    animation: whip-in 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  [data-transition="whip-pan"] {
+    overflow-x: clip;
+  }
+  [data-transition="cross-dissolve"][data-cut="in"]::before {
+    animation: dissolve-out 800ms linear both;
+  }
+  [data-transition="cross-dissolve"][data-cut="in"] [data-visuals] {
+    animation: fade-in 800ms linear both;
+  }
+  [data-transition="roll-credits"][data-cut="in"] .credit {
+    animation: roll-up 700ms cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i) * 90ms) both;
+  }
+  .smash {
+    animation: smash 260ms steps(1) both;
+  }
+  [data-transition="smash-cut"][data-cut="in"] [data-visuals] {
+    animation: appear-late 260ms steps(1) both;
+  }
   .marker {
     animation: marker-in 1.8s ease both;
   }
@@ -458,8 +607,16 @@
     scroll-behavior: auto;
   }
   .jcut-cue[data-shown],
-  [data-transition="j-cut"][data-cut="in"] > [data-visuals] {
+  [data-transition="j-cut"][data-cut="in"] > [data-visuals],
+  [data-transition="match-cut"][data-cut="in"] [data-visuals],
+  [data-transition="whip-pan"][data-cut="in"] [data-visuals],
+  [data-transition="cross-dissolve"][data-cut="in"] [data-visuals],
+  [data-transition="roll-credits"][data-cut="in"] [data-visuals],
+  [data-transition="smash-cut"][data-cut="in"] [data-visuals] {
     animation: fade-in 300ms linear both;
+  }
+  [data-transition="cross-dissolve"][data-cut="in"]::before {
+    animation: dissolve-out 300ms linear both;
   }
   /* Cuts become a plain fade. */
   [data-transition="hard-cut"] {
@@ -468,10 +625,7 @@
   [data-transition="hard-cut"] > * {
     transition: opacity 300ms linear;
   }
-  [data-transition="hard-cut"][data-cut="pending"] > * {
-    visibility: visible;
-    opacity: 0;
-  }
+
   .marker {
     animation: marker-fade 1.8s linear both;
   }

@@ -66,7 +66,9 @@ export function TransitionController({ children }: { children: ReactNode }) {
       let next = cut;
       let nextLead: SectionId | null = null;
       while (next + 1 < sections.length) {
-        const top = document.getElementById(sections[next + 1].id)?.getBoundingClientRect().top;
+        // A section can name the element its cut waits for (data-cut-anchor); default is its top edge.
+        const el = document.getElementById(sections[next + 1].id);
+        const top = (el?.querySelector("[data-cut-anchor]") ?? el)?.getBoundingClientRect().top;
         if (top === undefined) break;
         if (top > line) {
           if (top - line < window.innerHeight * LEAD) nextLead = sections[next + 1].id;

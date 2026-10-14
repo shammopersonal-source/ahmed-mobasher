@@ -29,8 +29,41 @@ export const site = {
   agency: {
     name: "Startup Solution",
     url: "https://www.startupsolution.online",
+    host: "startupsolution.online",
     role: "Founder & Director",
+    headline: ["Beyond freelancing.", "Meet Startup Solution."],
     description:
-      "A full-service creative digital agency built to help startups and growing brands launch stronger, look sharper, and move faster.",
+      "A full-service creative digital agency built to help startups and growing brands launch stronger, look sharper, and move faster — all under one roof.",
+    offer: "All-in-One Startup Package from $49",
+    services: [
+      {
+        name: "Creative Design & Branding",
+        from: "design",
+        text: "Logos, social media kits, motion graphics, and full brand identity systems. We build visual languages that make brands impossible to forget.",
+      },
+      {
+        name: "Video & Ad Production",
+        from: "video",
+        text: "From reels and YouTube content to high-converting e-commerce ads — edited with precision, paced for attention, and built to perform.",
+      },
+      {
+        name: "Web & Digital Solutions",
+        from: "development",
+        text: "Custom responsive websites, landing pages, and digital packages tailored for startups. Fast delivery, clean code, and a design that converts.",
+      },
+    ],
   },
+  form: {
+    formats: [
+      { value: "video", label: "Video editing / production" },
+      { value: "brand", label: "Brand identity / graphics" },
+      { value: "website", label: "Website design and development" },
+      { value: "app", label: "Mobile app development" },
+      { value: "multiple", label: "Multiple services" },
+      { value: "chat", label: "Just a chat" },
+    ],
+    intro: "Have a project in mind? A brand waiting to be born, a story waiting to be edited, or a website that deserves to exist? Let us talk.",
+    delivered: "Ahmed will review your message personally and get back to you shortly. Let us build something meaningful together.",
+  },
+  copyright: "© 2026 Ahmed Mobasher. All Rights Reserved.",
 } as const;

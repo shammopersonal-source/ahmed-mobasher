@@ -1,11 +1,16 @@
+import { Agency } from "@/components/Agency";
+import { Contact } from "@/components/Contact";
 import { Craft } from "@/components/Craft";
+import { Credits } from "@/components/Credits";
+import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
-import { Story } from "@/components/Story";
 import { JCutCue } from "@/components/JCutCue";
-import { PendingSection } from "@/components/PendingSection";
+import { Reviews } from "@/components/Reviews";
+import { Story } from "@/components/Story";
 import { Timeline } from "@/components/Timeline";
 import { TopBar } from "@/components/TopBar";
 import { TransitionController } from "@/components/TransitionController";
+import { Work } from "@/components/Work";
 
 export default function Page() {
   return (
@@ -19,12 +24,13 @@ export default function Page() {
         <Hero />
         <Story />
         <Craft />
-        <PendingSection id="work" slate="SC 04 — not yet cut" title="Media Bin" note="Projects as clips, opening in a source monitor." />
-        <PendingSection id="agency" slate="SC 05 — not yet cut" title="Render Output" note="Startup Solution, the next chapter." />
-        <PendingSection id="reviews" slate="SC 06 — not yet cut" title="Client Notes" note="Testimonials pinned at timecodes." />
-        <PendingSection id="credits" slate="SC 07 — not yet cut" title="End Credits" note="Certificates, rolling." />
-        <PendingSection id="contact" slate="SC 08 — not yet cut" title="Export Settings" note="The contact form, as an export dialog." />
+        <Work />
+        <Agency />
+        <Reviews />
+        <Credits />
+        <Contact />
       </main>
+      <Footer />
       <JCutCue section="craft" label="Skills and craft" />
       <div className="texture" aria-hidden />
     </TransitionController>

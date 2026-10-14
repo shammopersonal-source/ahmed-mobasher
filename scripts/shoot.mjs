@@ -44,7 +44,11 @@ if (flag("to")) {
   await sleep(+(flag("settle") ?? 500));
 }
 if (flag("click")) {
-  for (const target of flag("click").split(",")) await send("Runtime.evaluate", { expression: `document.getElementById(${JSON.stringify(target)}).click()` });
+  for (const target of flag("click").split(",")) {
+    // "css:<selector>" clicks the first match; anything else is an element id.
+    const find = target.startsWith("css:") ? `document.querySelector(${JSON.stringify(target.slice(4))})` : `document.getElementById(${JSON.stringify(target)})`;
+    await send("Runtime.evaluate", { expression: `${find}?.click()` });
+  }
   await sleep(1400);
 }
 const clip = flag("clip")?.split(",").map(Number);

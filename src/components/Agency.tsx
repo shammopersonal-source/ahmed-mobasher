@@ -1,0 +1,66 @@
+import type { CSSProperties } from "react";
+import { effects } from "@/content/craft";
+import { site } from "@/content/site";
+import { CutSection } from "./CutSection";
+import { ArrowUpRightIcon } from "./icons";
+import { Picture } from "./Picture";
+import { RenderOutput } from "./RenderOutput";
+
+const { agency } = site;
+
+/** Render Output: Startup Solution as the render of the disciplines above. */
+export function Agency() {
+  return (
+    <CutSection id="agency" transition="whip-pan" labelledBy="agency-title" className="bg-ivory px-3 pt-16 pb-20 text-on-light outline-none md:px-16 md:pt-28 md:pb-32">
+      <header className="px-2 md:px-0">
+        <p className="label text-gold-ink">
+          Agency · {agency.role} · Founded by {site.name}
+        </p>
+      </header>
+
+      <div data-visuals className="mt-8 md:mt-12">
+        <RenderOutput file="startup_solution.mov" steps={effects.slice(0, 3).map((e) => e.name.toLowerCase())}>
+          <div className="grid gap-10 p-5 md:grid-cols-12 md:gap-12 md:p-12">
+            <div className="md:col-span-7">
+              <h2 id="agency-title" className="display" style={{ "--display-size": "clamp(2.75rem, 6vw, 5.5rem)" } as CSSProperties}>
+                {agency.headline[0]}
+                <br />
+                {agency.headline[1]}
+              </h2>
+              <p className="mt-6 max-w-[46ch] text-lg leading-snug text-on-light-muted">{agency.description}</p>
+              <p className="label mt-6 inline-block border border-gold-ink px-3 py-2 text-gold-ink">{agency.offer}</p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a href={agency.url} target="_blank" rel="noopener" className="btn bg-navy text-ivory hover:bg-navy-light">
+                  Visit {agency.name}
+                  <ArrowUpRightIcon width={14} height={14} />
+                </a>
+                <span className="label text-on-light-muted">{agency.host}</span>
+              </div>
+            </div>
+            <div className="flex items-start justify-center md:col-span-5 md:justify-end">
+              {/* The logo is drawn for dark backgrounds, so it sits on a navy plate. */}
+              <a href={agency.url} target="_blank" rel="noopener" className="block w-full max-w-80 bg-navy p-6 md:p-8" aria-label={`${agency.name} website`}>
+                <Picture name="startup-solution-logo" alt={`${agency.name} logo`} className="h-auto w-full" />
+              </a>
+            </div>
+          </div>
+
+          <ol className="grid border-t border-line-on-light md:grid-cols-3">
+            {agency.services.map((service, i) => {
+              const source = effects.find((e) => e.id === service.from);
+              return (
+                <li key={service.name} className="border-line-on-light p-5 not-last:border-b md:p-8 md:not-last:border-r md:not-last:border-b-0">
+                  <p className="label text-on-light-faint">
+                    Pass {String(i + 1).padStart(2, "0")} · from {source?.name} ({source?.track})
+                  </p>
+                  <h3 className="heading mt-3 text-xl">{service.name}</h3>
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-on-light-muted">{service.text}</p>
+                </li>
+              );
+            })}
+          </ol>
+        </RenderOutput>
+      </div>
+    </CutSection>
+  );
+}

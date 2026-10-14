@@ -49,3 +49,79 @@ export const FiverrIcon = (p: IconProps) => (
     />
   </svg>
 );
+
+export const CloseIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M5 5l14 14M19 5 5 19" />
+  </svg>
+);
+
+export const ChevronLeftIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M15 5l-7 7 7 7" />
+  </svg>
+);
+
+export const ChevronRightIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M9 5l7 7-7 7" />
+  </svg>
+);
+
+export const LockIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <rect x="5" y="11" width="14" height="9" />
+    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </svg>
+);
+
+export const MailIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <rect x="3" y="5.5" width="18" height="13" />
+    <path d="m3.5 6.5 8.5 7 8.5-7" />
+  </svg>
+);
+
+export const PhoneIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M6.5 3.5h3l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2 4.5 1.5v3a2 2 0 0 1-2 2A15 15 0 0 1 4.5 5.5a2 2 0 0 1 2-2z" />
+  </svg>
+);
+
+export const PinIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z" />
+    <circle cx="12" cy="10" r="2.25" />
+  </svg>
+);
+
+export const ClockIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="M12 7.5V12l3 2" />
+  </svg>
+);
+
+export const CheckIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="m5 12.5 4.5 4.5L19 7.5" />
+  </svg>
+);
+
+export const LinkedInIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path
+      fill="currentColor"
+      d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm2.2 6.7V18h2.7V9.7H6.2zm1.35-4.1a1.55 1.55 0 1 0 0 3.1 1.55 1.55 0 0 0 0-3.1zM10.6 9.7V18h2.6v-4.1c0-1.1.2-2.2 1.6-2.2 1.4 0 1.4 1.3 1.4 2.3V18h2.6v-4.6c0-2.3-.5-4-3.2-4a2.8 2.8 0 0 0-2.5 1.4V9.7h-2.5z"
+    />
+  </svg>
+);
+
+export const FacebookIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path
+      fill="currentColor"
+      d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"
+    />
+  </svg>
+);

@@ -58,6 +58,7 @@ function measure() {
   });
   // Keep every clip long enough to hit comfortably (≥24px on the shortest mobile rail),
   // even when its section is short; earlier clips give up the space.
+  for (let i = 1; i < starts.length; i++) starts[i] = Math.max(starts[i], starts[i - 1] + MIN_CLIP);
   for (let i = starts.length - 1, end = 1; i > 0; i--) {
     starts[i] = Math.min(starts[i], end - MIN_CLIP);
     end = starts[i];
