@@ -1,52 +1,34 @@
-import type { CSSProperties } from "react";
-import { projects, quoteFor, workIntro } from "@/content/projects";
-import { CutSection } from "./CutSection";
-import { LockIcon } from "./icons";
-import { MediaBin, ProjectDetails } from "./MediaBin";
+import { projects, workIntro } from "@/content/projects";
+import { ProjectDetails } from "./ProjectDetails";
+import { SectionHead, shell } from "./SectionHead";
+import { WorkShowcase } from "./WorkShowcase";
 
-/** Media Bin: projects as clips; each opens in a source monitor. */
 export function Work() {
   return (
-    <CutSection id="work" transition="match-cut" labelledBy="work-title" className="border-t border-line bg-navy px-3 pt-16 pb-20 outline-none md:px-16 md:pt-28 md:pb-32">
-      <header className="px-2 md:px-0">
-        <p className="label text-gold">
-          {workIntro.slate} · {projects.length} clips
-        </p>
-        <h2 id="work-title" className="display mt-5" style={{ "--display-size": "clamp(3rem, 8vw, 7rem)" } as CSSProperties}>
-          {workIntro.title}
-        </h2>
-      </header>
-
-      <div data-visuals data-cut-anchor className="js-only mt-10 md:mt-14">
-        <MediaBin />
+    <section id="work" aria-labelledby="work-title" className="dark overflow-hidden bg-navy py-20 text-ivory md:py-28">
+      <div className={shell}>
+        <SectionHead id="work" index="04" label={`${workIntro.label} · ${String(projects.length).padStart(2, "0")}`} title={workIntro.title} dark />
       </div>
 
-      {/* Without JS there is no monitor, so every project is written out in full. */}
-      <ol className="nojs-only mt-10 grid gap-3 md:grid-cols-2">
-        {projects.map((p) => {
-          const quote = quoteFor(p);
-          return (
-            <li key={p.id} className="border border-line p-5 md:p-8">
-              <ProjectDetails project={p} />
-              {quote ? (
-                <blockquote className="mt-6 border-l-2 border-gold pl-4 text-[0.9375rem] text-on-dark-muted">
-                  “{quote.text}”
-                  <footer className="label mt-3 flex items-center gap-2 text-on-dark-faint">
-                    <LockIcon width={12} height={12} /> {quote.author} · {quote.location}
-                  </footer>
-                </blockquote>
-              ) : null}
-            </li>
-          );
-        })}
+      <div className="js-only mt-6 md:-mt-14">
+        <WorkShowcase />
+      </div>
+
+      {/* Without JS there is no dialog, so each project is written out in full. */}
+      <ol className={`nojs-only mt-12 grid gap-5 md:grid-cols-2 ${shell}`}>
+        {projects.map((p) => (
+          <li key={p.id} className="border border-line bg-navy-mid p-6">
+            <ProjectDetails project={p} />
+          </li>
+        ))}
       </ol>
 
-      <p className="mt-8 px-2 text-on-dark-muted md:px-0">
+      <p className={`${shell} mt-10 text-lg text-on-dark-muted`}>
         {workIntro.more}{" "}
-        <a href="#contact" className="text-gold underline underline-offset-4 hover:text-gold-light">
+        <a href="#contact" className="font-bold text-gold-light underline underline-offset-4">
           Ask for it
         </a>
       </p>
-    </CutSection>
+    </section>
   );
 }

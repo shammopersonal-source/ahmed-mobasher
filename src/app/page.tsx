@@ -1,38 +1,34 @@
+import { About } from "@/components/About";
 import { Agency } from "@/components/Agency";
+import { Certificates } from "@/components/Certificates";
 import { Contact } from "@/components/Contact";
-import { Craft } from "@/components/Craft";
-import { Credits } from "@/components/Credits";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
-import { JCutCue } from "@/components/JCutCue";
+import { Nav } from "@/components/Nav";
 import { Reviews } from "@/components/Reviews";
-import { Story } from "@/components/Story";
-import { Timeline } from "@/components/Timeline";
-import { TopBar } from "@/components/TopBar";
-import { TransitionController } from "@/components/TransitionController";
+import { Services } from "@/components/Services";
+import { Skills } from "@/components/Skills";
 import { Work } from "@/components/Work";
 
 export default function Page() {
   return (
-    <TransitionController>
-      <a href="#story" className="btn btn-primary sr-only z-[70] focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
+    <>
+      <a href="#about" className="btn btn-navy sr-only z-[70] focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
         Skip to content
       </a>
-      <TopBar />
-      <Timeline />
-      <main className="pr-[var(--rail-w)]">
+      <Nav />
+      <main>
         <Hero />
-        <Story />
-        <Craft />
+        <About />
+        <Skills />
+        <Services />
         <Work />
         <Agency />
+        <Certificates />
         <Reviews />
-        <Credits />
         <Contact />
       </main>
       <Footer />
-      <JCutCue section="craft" label="Skills and craft" />
-      <div className="texture" aria-hidden />
-    </TransitionController>
+    </>
   );
 }

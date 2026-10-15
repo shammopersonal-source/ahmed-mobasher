@@ -1,11 +1,12 @@
-# ahmedmobasher.online — "The Cut"
+# ahmedmobasher.online
 
-Ahmed Mobasher's portfolio, built as an editing suite: a master timeline at the bottom
-(a rail on the right on phones) is the main navigation, and each section enters with a
-real edit (hard cut, J-cut, match cut, whip pan, cross dissolve, smash cut).
+Ahmed Mobasher's portfolio. Next.js (App Router) · TypeScript · Tailwind CSS v4.
+Type: Cabinet Grotesk (Indian Type Foundry, via Fontshare) and JetBrains Mono for small
+labels, both self-hosted (`src/fonts/`).
 
-Next.js (App Router) · TypeScript · Tailwind CSS v4. No animation library; transitions
-are CSS driven by a small scroll store (`src/lib/playhead.ts`).
+Sections: hero, About, Skills, Services, Work (horizontal showcase), Agency, Certificates
+(auto-scrolling strip), Reviews, Contact. The hero portrait rotates through three photos and
+tilts toward the cursor on desktop (flat on touch and with reduced motion).
 
 ## Run it
 
@@ -22,13 +23,13 @@ All copy lives in `src/content/` — components only lay it out.
 | File | What it holds |
 |---|---|
 | `site.ts` | Name, contact details, links, agency, contact form options |
-| `story.ts` | The six Story scenes |
-| `craft.ts` | The four effects (tools and parameters); parameter lists can grow |
-| `projects.ts` | The media bin. **Add a project by appending to the array.** Optional `video`, `images`, `client`, `result`, `quoteId` |
-| `reviews.ts` | Client notes |
-| `certificates.ts` | End credits |
-| `years.ts` | The only place career years live (timecode readout and ruler) |
-| `sections.ts` | Section order, timeline tracks and transition names |
+| `about.ts` | About text and quick facts |
+| `skills.ts` | The four skill areas (tools and what he does); lists can grow |
+| `services.ts` | The three services |
+| `projects.ts` | Work. **Add a project by appending to the array.** Optional `video`, `images`, `client`, `result`, `quoteId` |
+| `reviews.ts` | Client testimonials |
+| `certificates.ts` | Certificates (image, story, details) |
+| `nav.ts` | Navigation links |
 
 Images: put the original in `legacy/` or embed it, run `npm run extract-assets` to write
 AVIF + WebP to `public/img` and regenerate `src/content/assets.generated.ts`, then
@@ -51,5 +52,4 @@ so the form works with JavaScript off.
 ## Scripts
 
 - `npm run extract-assets` — images from `legacy/` → `public/img`
-- `npm run subset-hero-font` — regenerate the hero headline's font subset if the name changes
-- `node scripts/shoot.mjs <url> <out.png> <w> <h> <dpr> [--mobile] [--reduced-motion] [--no-js] [--to=id] [--click=id]` — review screenshots via headless Chrome
+- `node scripts/shoot.mjs <url> <out.png> <w> <h> <dpr> [--mobile] [--reduced-motion] [--no-js] [--to=id] [--click=id|css:sel] [--full]` — review screenshots via headless Chrome

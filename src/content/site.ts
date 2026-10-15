@@ -5,6 +5,7 @@ export const site = {
   role: "CSE student and creative technologist",
   tagline: "Where circuits meet creativity.",
   summary: "Video editor, brand designer and web & app developer. Freelancing since 2020.",
+  roles: ["Video editing", "Brand design", "Web & apps", "Robotics"],
   description:
     "Ahmed Mobasher is a CSE student and creative technologist from Bangladesh — video editing, brand and graphic design, and web & app development. Freelancing since 2020, founder of Startup Solution.",
   availability: "Available for freelance",
@@ -38,17 +39,14 @@ export const site = {
     services: [
       {
         name: "Creative Design & Branding",
-        from: "design",
         text: "Logos, social media kits, motion graphics, and full brand identity systems. We build visual languages that make brands impossible to forget.",
       },
       {
         name: "Video & Ad Production",
-        from: "video",
         text: "From reels and YouTube content to high-converting e-commerce ads — edited with precision, paced for attention, and built to perform.",
       },
       {
         name: "Web & Digital Solutions",
-        from: "development",
         text: "Custom responsive websites, landing pages, and digital packages tailored for startups. Fast delivery, clean code, and a design that converts.",
       },
     ],

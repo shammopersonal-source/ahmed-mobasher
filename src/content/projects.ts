@@ -1,11 +1,11 @@
 import type { AssetName } from "./assets.generated";
 import { reviews } from "./reviews";
 
-// The media bin. Add a project by appending to this array; the bin, the source monitor
-// and the no-JS fallback all read from it. Copy comes from the previous site.
+// Selected work. Add a project by appending to this array; the showcase, the project
+// dialog and the no-JS fallback all read from it. Copy comes from the previous site.
 export type Project = {
   id: string;
-  /** Clip number shown in the bin. */
+  /** Number shown on the card. */
   number: string;
   title: string;
   status: "Completed" | "In progress";
@@ -19,17 +19,19 @@ export type Project = {
   result?: string;
   /** Id of a testimonial in reviews.ts, if the client left one. */
   quoteId?: string;
-  /** Video for the source monitor. Loaded only when the monitor opens. */
+  /** Video for the project dialog. Loaded only when the dialog opens. */
   video?: { src: string; poster?: AssetName };
-  /** Stills for the bin's hover scrub and the monitor. Without any, the clip gets a typographic slate. */
+  /** Stills for the card cover and dialog. Without any, the card gets a typographic cover. */
   images?: { name: AssetName; alt: string }[];
-  /** Shown large at the head of the bin. Defaults to the first project. */
-  featured?: boolean;
+  /** Short category shown on the card cover. */
+  category: string;
+  /** Card cover colour. */
+  accent?: boolean;
 };
 
 export const workIntro = {
-  slate: "Media bin",
-  title: "Selected work",
+  label: "Work",
+  title: "Recent projects",
   more: "And more in the pipeline. Enquire to view the full portfolio.",
 };
 
@@ -46,7 +48,7 @@ export const projects: Project[] = [
     client: { name: "Confidential Client", location: "United States", service: "Graphic Design" },
     result: "Delivered to full client satisfaction, with a result they described as professional and impactful.",
     quoteId: "note-presentation",
-    featured: true,
+    category: "Presentation",
   },
   {
     id: "ecommerce-ads",
@@ -60,6 +62,8 @@ export const projects: Project[] = [
     client: { name: "Confidential Client", location: "Jacksonville, US", service: "Ecommerce Ads" },
     result: "The client called the results top tier and immediately committed to future collaborations.",
     quoteId: "note-ecommerce",
+    category: "E-commerce",
+    accent: true,
   },
   {
     id: "florida-commercial",
@@ -73,6 +77,7 @@ export const projects: Project[] = [
     client: { name: "Confidential Client", location: "Florida, US", service: "Video Editing" },
     result: "Earned a five-star review and an open invitation to collaborate again.",
     quoteId: "note-video",
+    category: "Commercial",
   },
 ];
 

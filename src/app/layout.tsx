@@ -3,45 +3,26 @@ import localFont from "next/font/local";
 import { site } from "@/content/site";
 import "./globals.css";
 
-// All fonts are self-hosted Latin subsets (see src/fonts/README.md).
-
-// The hero headline is the LCP element, so it gets its own 3 KB cut of Bodoni Moda (just
-// the letters of the name, see scripts/subset-hero-font.mjs), preloaded, with a
-// hand-tuned Times fallback ("Bodoni Hero Fallback" in globals.css; next/font can't derive
-// one from an 11-glyph subset).
-const bodoniHero = localFont({
-  src: "../fonts/BodoniModa-hero.woff2",
-  weight: "500",
-  display: "swap",
-  preload: true,
-  adjustFontFallback: false,
-  variable: "--font-bodoni-hero",
-});
-// Full Bodoni Moda with its optical-size axis. Not preloaded: nothing above the fold needs it.
-const bodoni = localFont({
-  src: "../fonts/BodoniModa-latin.woff2",
-  weight: "400 900",
-  display: "swap",
-  preload: false,
-  adjustFontFallback: "Times New Roman",
-  variable: "--font-bodoni",
-});
-const plexSans = localFont({
-  src: "../fonts/IBMPlexSans-latin.woff2",
-  weight: "100 700",
+// Self-hosted Latin subsets (see src/fonts/README.md).
+const cabinet = localFont({
+  src: [
+    { path: "../fonts/CabinetGrotesk-500-latin.woff2", weight: "500" },
+    { path: "../fonts/CabinetGrotesk-700-latin.woff2", weight: "700" },
+    { path: "../fonts/CabinetGrotesk-800-latin.woff2", weight: "800" },
+  ],
   display: "swap",
   adjustFontFallback: "Arial",
-  variable: "--font-plex-sans",
+  variable: "--font-cabinet",
 });
-// Fall back to real monospace faces with the same 0.6em advance, so labels wrap
-// identically before and after the webfont arrives.
-const plexMono = localFont({
-  src: "../fonts/IBMPlexMono-400-latin.woff2",
-  weight: "400",
+// Small labels only, so it isn't preloaded.
+const jetbrains = localFont({
+  src: "../fonts/JetBrainsMono-latin.woff2",
+  weight: "400 500",
   display: "swap",
+  preload: false,
   adjustFontFallback: false,
   fallback: ["Menlo", "Roboto Mono", "DejaVu Sans Mono", "Courier New", "monospace"],
-  variable: "--font-plex-mono",
+  variable: "--font-jetbrains",
 });
 
 const title = `${site.name} — Video editor, designer & developer`;
@@ -63,7 +44,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title, description: site.description, images: ["/og.png"] },
 };
 
-export const viewport: Viewport = { themeColor: "#0d1b2a", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#ede8dc" };
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -96,9 +77,8 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${bodoniHero.variable} ${bodoni.variable} ${plexSans.variable} ${plexMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${cabinet.variable} ${jetbrains.variable}`}>
       <head>
-        {/* Lets CSS tell "JS is running" apart from no-JS before React loads (see .nojs-only). */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body>

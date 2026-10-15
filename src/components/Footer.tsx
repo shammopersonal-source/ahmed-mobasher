@@ -1,48 +1,68 @@
-import type { CSSProperties } from "react";
 import { site } from "@/content/site";
+import { navLinks } from "@/content/nav";
 import { ArrowUpRightIcon, FacebookIcon, FiverrIcon, LinkedInIcon, MailIcon, UpworkIcon } from "./icons";
 
-/** Final frame. */
 export function Footer() {
   const socials = [
-    { label: "LinkedIn", href: site.links.linkedin, icon: <LinkedInIcon width={18} height={18} /> },
-    { label: "Facebook", href: site.links.facebook, icon: <FacebookIcon width={18} height={18} /> },
-    { label: "Upwork", href: site.links.upwork, icon: <UpworkIcon width={18} height={18} /> },
-    { label: "Fiverr", href: site.links.fiverr, icon: <FiverrIcon width={36} height={14} /> },
-    { label: "Email", href: `mailto:${site.contact.email}`, icon: <MailIcon width={18} height={18} /> },
+    { label: "LinkedIn", href: site.links.linkedin, icon: <LinkedInIcon width={20} height={20} /> },
+    { label: "Facebook", href: site.links.facebook, icon: <FacebookIcon width={20} height={20} /> },
+    { label: "Upwork", href: site.links.upwork, icon: <UpworkIcon width={20} height={20} /> },
+    { label: "Fiverr", href: site.links.fiverr, icon: <FiverrIcon width={38} height={14} /> },
+    { label: "Email", href: `mailto:${site.contact.email}`, icon: <MailIcon width={20} height={20} /> },
   ];
 
   return (
-    <footer className="border-t border-line bg-navy px-5 pt-20 pb-10 pr-[calc(var(--rail-w)+1.25rem)] md:px-16 md:pt-28">
-      <p className="display text-center text-gold-light" style={{ "--display-size": "clamp(5rem, 18vw, 15rem)", lineHeight: 0.85 } as CSSProperties} aria-label="Fin">
-        FIN
-      </p>
-      <p className="label mt-6 text-center text-on-dark-faint">
-        {site.role} · Freelancing since 2020
-      </p>
-
-      <ul className="mt-10 flex flex-wrap justify-center gap-3">
-        {socials.map((s) => (
-          <li key={s.label}>
-            <a
-              href={s.href}
-              target={s.href.startsWith("mailto:") ? undefined : "_blank"}
-              rel="noopener noreferrer"
-              aria-label={s.label}
-              className="flex h-11 min-w-11 items-center justify-center border border-line px-3 text-on-dark-muted hover:border-gold hover:text-ivory"
-            >
-              {s.icon}
+    <footer className="dark bg-navy text-ivory">
+      <div className="mx-auto max-w-[90rem] px-5 pt-16 pb-10 md:px-10 md:pt-24">
+        <div className="grid gap-12 md:grid-cols-12 md:gap-5">
+          <div className="md:col-span-6">
+            <p className="h-display text-[clamp(3rem,8vw,6.5rem)]">
+              Let&apos;s build
+              <br />
+              <span className="text-gold-light">something.</span>
+            </p>
+            <a href="#contact" className="btn btn-gold notch mt-8">
+              Start a project <ArrowUpRightIcon width={14} height={14} />
             </a>
-          </li>
-        ))}
-      </ul>
+          </div>
+          <nav aria-label="Footer" className="md:col-span-3 md:col-start-8">
+            <p className="mono text-gold">Sections</p>
+            <ul className="mt-4 space-y-2">
+              {navLinks.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href} className="text-lg text-on-dark-muted hover:text-ivory">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="md:col-span-2">
+            <p className="mono text-gold">Elsewhere</p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {socials.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target={s.href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="flex h-11 min-w-11 items-center justify-center border border-line px-3 text-on-dark-muted hover:border-gold hover:text-ivory"
+                  >
+                    {s.icon}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-      <div className="label mt-14 flex flex-col items-center justify-between gap-4 border-t border-line pt-6 text-on-dark-faint md:flex-row">
-        <span>{site.copyright}</span>
-        <a href={site.agency.url} target="_blank" rel="noopener" className="flex items-center gap-1.5 text-gold hover:text-gold-light">
-          Founder of {site.agency.name} — Digital Agency
-          <ArrowUpRightIcon width={12} height={12} />
-        </a>
+        <div className="mono mt-16 flex flex-col justify-between gap-4 border-t border-line pt-6 text-on-dark-faint md:flex-row">
+          <span>{site.copyright}</span>
+          <a href={site.agency.url} target="_blank" rel="noopener" className="flex items-center gap-1.5 text-gold hover:text-gold-light">
+            Founder of {site.agency.name} — Digital Agency <ArrowUpRightIcon width={12} height={12} />
+          </a>
+        </div>
       </div>
     </footer>
   );

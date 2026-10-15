@@ -1,6 +1,6 @@
 import type { AssetName } from "./assets.generated";
 
-// End credits. Verbatim from the previous site's certificate modal data.
+// Certificates. Verbatim from the previous site's certificate data.
 export type Certificate = {
   id: string;
   kind: string;
@@ -9,11 +9,11 @@ export type Certificate = {
   issuer: string;
   story: string;
   meta: { label: string; value: string }[];
-  /** Without an image the credit opens a typographic card instead. */
+  /** Without an image the card shows a typographic placeholder instead. */
   image?: AssetName;
 };
 
-export const creditsIntro = { slate: "End credits", title: "Certificates" };
+export const certificatesIntro = { label: "Certificates", title: "Credentials", hint: "Click a certificate to learn more" };
 
 export const certificates: Certificate[] = [
   {

@@ -125,3 +125,27 @@ export const FacebookIcon = (p: IconProps) => (
     />
   </svg>
 );
+
+export const ArrowRightIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M4 12h15M12.5 5.5 19 12l-6.5 6.5" />
+  </svg>
+);
+
+export const ArrowLeftIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M20 12H5M11.5 5.5 5 12l6.5 6.5" />
+  </svg>
+);
+
+export const MenuIcon = (p: IconProps) => (
+  <svg {...base(p)} {...stroke}>
+    <path d="M3 7h18M3 12h18M3 17h18" />
+  </svg>
+);
+
+export const PauseIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor" />
+  </svg>
+);

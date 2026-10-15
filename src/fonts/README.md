@@ -1,9 +1,8 @@
-Self-hosted Latin subsets (from Google Fonts, all SIL Open Font License 1.1):
+Self-hosted Latin subsets:
 
-- `BodoniModa-latin.woff2` — variable (opsz 6–96, wght 400–900)
-- `BodoniModa-hero.woff2` — the hero headline's glyphs only; regenerate with `npm run subset-hero-font`
-- `IBMPlexSans-latin.woff2` — variable (wght 100–700)
-- `IBMPlexMono-400-latin.woff2` — regular
+- `CabinetGrotesk-{500,700,800}-latin.woff2` — Cabinet Grotesk by Indian Type Foundry, via
+  Fontshare. ITF Free Font License: free for personal and commercial use including web;
+  the font files may not be sold or redistributed as fonts. Credit: Indian Type Foundry.
+- `JetBrainsMono-latin.woff2` — JetBrains Mono (variable 400–500), SIL Open Font License 1.1.
 
-Loaded with `next/font/local` in `src/app/layout.tsx`. Self-hosting keeps the stylesheet to
-one `@font-face` per family instead of one per language subset.
+Loaded with `next/font/local` in `src/app/layout.tsx`.

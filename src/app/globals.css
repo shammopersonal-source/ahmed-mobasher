@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
-/*
-  Palette — extracted verbatim from the previous site. No new hues: everything
-  below the nine base colours is a shade or opacity step of one of them.
-*/
+/* Palette — the nine colours from the previous site, plus one darker gold for small text
+   on light backgrounds. No other hues; everything else is an opacity step of these. */
 :root {
   --navy: #0d1b2a;
   --navy-mid: #162236;
@@ -14,47 +12,16 @@
   --gold: #c9a96e;
   --gold-dark: #a0783c;
   --gold-light: #e0c48a;
-  /* gold-dark at 76% value: 5.5:1 on ivory, 5.1:1 on ivory-warm. Small text on light surfaces. */
-  --gold-ink: #7a5b2e;
+  --gold-ink: #7a5b2e; /* 5.5:1 on ivory, 5.1:1 on ivory-warm */
 
-  /* Fixed derived scale (replaces ~40 ad-hoc rgba values). Ratios are worst case across the surface family. */
-  --on-dark: var(--ivory);
-  --on-dark-muted: rgb(245 240 232 / 0.72); /* ≥6.6:1 */
-  --on-dark-faint: rgb(245 240 232 / 0.56); /* ≥4.6:1 */
-  --on-light: var(--navy);
-  --on-light-muted: rgb(13 27 42 / 0.75); /* ≥6.9:1 */
-  --on-light-faint: rgb(13 27 42 / 0.64); /* ≥4.8:1 */
-  --line: rgb(245 240 232 / 0.12);
-  --line-strong: rgb(201 169 110 / 0.35);
+  --on-dark-muted: rgb(245 240 232 / 0.72);
+  --on-dark-faint: rgb(245 240 232 / 0.56);
+  --on-light-muted: rgb(13 27 42 / 0.75);
+  --on-light-faint: rgb(13 27 42 / 0.64);
+  --line: rgb(245 240 232 / 0.14);
   --line-on-light: rgb(13 27 42 / 0.14);
-  --accent-wash: rgb(201 169 110 / 0.08);
 
-  /* Space the fixed timeline takes, so content never sits underneath it. */
-  --topbar-h: 3.5rem;
-  --timeline-h: 0px;
-  --rail-w: 1.75rem;
-}
-
-@media (min-width: 768px) {
-  :root {
-    --timeline-h: 6.25rem;
-    --rail-w: 0px;
-  }
-}
-
-/*
-  Fallback for the hero headline while its webfont loads. Measured: Bodoni Moda 500 sets
-  "Ahmed" / "Mobasher" 13–14% wider than Times New Roman, plus ~1% more at the 1x optical
-  size. 116% keeps the fallback a hair *wider* than the final text, so the first paint is
-  already the largest paint and the swap never registers as a later LCP or a shift.
-*/
-@font-face {
-  font-family: "Bodoni Hero Fallback";
-  src: local("Times New Roman");
-  size-adjust: 116%;
-  ascent-override: 97%;
-  descent-override: 34.5%;
-  line-gap-override: 0%;
+  --nav-h: 4.5rem;
 }
 
 @theme inline {
@@ -68,45 +35,38 @@
   --color-gold-dark: var(--gold-dark);
   --color-gold-light: var(--gold-light);
   --color-gold-ink: var(--gold-ink);
-  --color-on-dark: var(--on-dark);
   --color-on-dark-muted: var(--on-dark-muted);
   --color-on-dark-faint: var(--on-dark-faint);
-  --color-on-light: var(--on-light);
   --color-on-light-muted: var(--on-light-muted);
   --color-on-light-faint: var(--on-light-faint);
   --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
   --color-line-on-light: var(--line-on-light);
-  --color-accent-wash: var(--accent-wash);
 
-  --font-display: var(--font-bodoni), "Bodoni 72", Didot, "Times New Roman", serif;
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), Menlo, "Courier New", monospace;
-
-  --breakpoint-xs: 26rem;
+  --font-sans: var(--font-cabinet), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, Menlo, monospace;
 }
 
 @layer base {
   html {
-    background: var(--navy);
-    color: var(--on-dark);
-    scroll-padding-top: var(--topbar-h);
+    background: var(--ivory-warm);
+    color: var(--navy);
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-h);
     -webkit-text-size-adjust: 100%;
   }
-
   body {
     font-family: var(--font-sans);
-    line-height: 1.6;
-    padding-bottom: var(--timeline-h);
+    font-weight: 500;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
-
   :focus-visible {
-    outline: 2px solid var(--gold-light);
+    outline: 2px solid var(--gold-dark);
     outline-offset: 3px;
-    border-radius: 2px;
   }
-
+  .dark :focus-visible {
+    outline-color: var(--gold-light);
+  }
   ::selection {
     background: var(--gold);
     color: var(--navy);
@@ -114,51 +74,26 @@
 }
 
 @layer components {
-  /*
-    Display type. Bodoni Moda is only ever set at 40px and up, with the optical-size
-    axis following the rendered size. Anything below 40px uses .heading (Plex Sans
-    semibold) instead.
-  */
-  .display {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-optical-sizing: auto;
-    line-height: 0.92;
-    letter-spacing: -0.015em;
-    font-size: max(2.5rem, var(--display-size, 2.5rem));
-  }
-
-  /* Hero headline only: the preloaded subset first, the full family as backstop. */
-  .display-hero {
-    font-family: var(--font-bodoni-hero), "Bodoni Hero Fallback", var(--font-display);
-  }
-
-  /*
-    On 1x screens the large optical sizes draw hairlines thinner than a device pixel
-    (they barely change between opsz 36 and 96), so serifs and thin strokes grey out.
-    Pin a sturdier cut there; high-density screens keep the size-matched one.
-  */
-  @media (max-resolution: 1.49dppx) {
-    .display {
-      font-variation-settings: "opsz" 24;
-    }
-  }
-
-  .heading {
-    font-family: var(--font-sans);
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-  }
-
-  /* Editor's chrome: timecode, slates, track labels, metadata. */
-  .label {
+  /* Small labels only. */
+  .mono {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    line-height: 1.2;
-    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    font-variant-numeric: tabular-nums;
+  }
+
+  .h-display {
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.86;
+  }
+
+  .h-section {
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    font-size: clamp(3.25rem, 7.5vw, 6.5rem);
   }
 
   .btn {
@@ -166,480 +101,155 @@
     align-items: center;
     justify-content: center;
     gap: 0.625rem;
-    min-height: 3rem;
-    padding: 0 1.375rem;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    border: 1px solid transparent;
+    min-height: 3.25rem;
+    padding: 0 1.5rem;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    border: 2px solid transparent;
     transition:
-      background-color 160ms ease,
-      border-color 160ms ease,
-      color 160ms ease;
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
   }
-
-  .btn-primary {
+  .btn-gold {
     background: var(--gold);
+    border-color: var(--gold);
     color: var(--navy);
   }
-  .btn-primary:hover {
+  .btn-gold:hover {
     background: var(--gold-light);
-  }
-
-  .btn-ghost {
-    border-color: rgb(245 240 232 / 0.4);
-    color: var(--ivory);
-  }
-  .btn-ghost:hover {
-    border-color: var(--ivory);
-    background: rgb(245 240 232 / 0.06);
-  }
-
-  /* Marketplace links: gold outline, brand mark in ivory. */
-  .btn-outline-gold {
-    border-color: var(--gold);
-    color: var(--ivory);
-  }
-  .btn-outline-gold:hover {
-    background: var(--accent-wash);
     border-color: var(--gold-light);
   }
+  .btn-navy {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--ivory);
+  }
+  .btn-navy:hover {
+    background: var(--navy-light);
+    border-color: var(--navy-light);
+  }
+  .btn-outline {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+  .btn-outline:hover {
+    background: var(--navy);
+    color: var(--ivory);
+  }
+  .btn-outline-light {
+    border-color: rgb(245 240 232 / 0.35);
+    color: var(--ivory);
+  }
+  .btn-outline-light:hover {
+    border-color: var(--ivory);
+  }
+  /* Marketplace marks: palette colours, no brand greens. */
+  .btn-market {
+    padding: 0 1.125rem;
+    border-color: var(--line-on-light);
+    background: var(--ivory);
+    color: var(--navy);
+  }
+  .btn-market:hover {
+    border-color: var(--navy);
+  }
+  /* Cut corner, used on the primary "Hire me". */
+  .notch {
+    clip-path: polygon(0 0, 100% 0, 100% 68%, 86% 100%, 0 100%);
+  }
 }
 
-/*
-  Hard cut (Hero → Story). Until the playhead reaches the section it holds the outgoing
-  shot's navy with nothing on it; on the beat it switches to its own frame in one step,
-  no easing. `data-cut` is only ever set by JS, so without it the section is simply visible.
-*/
-[data-transition="hard-cut"][data-cut="pending"] {
-  background: var(--navy);
-}
-/* opacity, not visibility: hidden content must stay focusable, or keyboard users would tab straight past it. */
-[data-transition="hard-cut"][data-cut="pending"] > * {
-  opacity: 0;
-}
-
-/*
-  J-cut (Story → Craft). The heading is never held back; only the panel under it (the
-  visuals) waits for the cut. The audio lead-in is the fixed cue bar (JCutCue).
-*/
-[data-transition="j-cut"][data-cut="pending"] > [data-visuals] {
-  opacity: 0;
-}
-.jcut-cue {
-  visibility: hidden;
-}
-.jcut-cue[data-shown] {
-  visibility: visible;
-}
-
-/* Visuals that wait for their section's cut (every transition except the hard cut, which hides everything). */
-[data-cut="pending"]:not([data-transition="hard-cut"]) [data-visuals] {
-  opacity: 0;
-}
-
-/* Cross dissolve (Agency → Reviews): the outgoing ivory frame dissolves into this one. */
-[data-transition="cross-dissolve"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--ivory);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-[data-transition="cross-dissolve"][data-cut="pending"]::before {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* JS-only and no-JS-only content. `html.js` is set by an inline script before paint. */
+/* JS-only and no-JS-only content (html.js is set before paint). */
 .js .nojs-only {
   display: none;
 }
 html:not(.js) .js-only {
   display: none;
 }
-/* With JS, list excerpts clamp (the viewer shows the full note); without it they don't. */
-.js .note-excerpt {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
-/* Razor tool over clips, on devices with a real pointer only. */
-@media (hover: hover) and (pointer: fine) {
-  [data-razor] {
-    cursor: url("/cursors/razor.svg") 6 16, pointer;
-  }
-}
-
-/* Modal dialogs: no page scroll behind them. */
-html:has(dialog[open]) {
-  overflow: hidden;
-}
-
-/* Match cut shape: the frame that travels from the inspector to the featured clip. */
-.match-shape {
-  position: fixed;
-  z-index: 45;
-  pointer-events: none;
-  border: 2px solid var(--gold-light);
-  box-shadow: 0 0 0 1px var(--navy);
-  transform-origin: 0 0;
-}
-
-/* Agency render: the frame is revealed by the render's scan line. */
-.render-frame[data-rendering] > * {
-  clip-path: inset(0 var(--reveal) 0 0);
-}
-.render-frame[data-rendering]::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: var(--reveal);
-  width: 2px;
-  background: var(--gold-ink);
-}
-
-.export-bar {
-  transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-/* Hero slideshow: shots cross-fade (a plain cut under reduced motion). */
+/* Hero portrait: shots cross-fade (instant under reduced motion). */
 .hero-shot {
   opacity: 0;
 }
 .hero-shot[data-on] {
   opacity: 1;
 }
+
+/* Signature: the portrait card turns toward the cursor. --rx/--ry are set by JS on
+   fine-pointer devices only; everywhere else they stay 0 and the card is flat. */
+.tilt {
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.tilt[data-tracking] {
+  transition-duration: 120ms;
+}
+.tilt-float {
+  transform: translateZ(var(--z, 40px));
+}
+
+/* Certificates marquee (as on the previous site). */
+.marquee {
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 1.25rem;
+}
 @media (prefers-reduced-motion: no-preference) {
+  .js .marquee-track {
+    animation: marquee 48s linear infinite;
+  }
+  .js .marquee:hover .marquee-track,
+  .js .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
   .hero-shot {
     transition: opacity 900ms ease;
   }
 }
-
-/* Effects Inspector preview. Each effect is a layer that is simply there or not. */
-.fx-layer {
-  visibility: hidden;
-  pointer-events: none;
-}
-/* Ungraded: flat and washed out, like log footage. */
-.fx-shot {
-  filter: grayscale(0.85) contrast(0.78) brightness(1.12);
-}
-.fx-preview[data-video] .fx-shot {
-  filter: contrast(1.1) saturate(1.2);
-}
-.fx-preview[data-video] .fx-grade,
-.fx-preview[data-video] .fx-bars,
-.fx-preview[data-design] .fx-grid,
-.fx-preview[data-development] .fx-markup,
-.fx-preview[data-robotics] .fx-trace {
-  visibility: visible;
-}
-.fx-grade {
-  background: linear-gradient(160deg, rgb(224 196 138 / 0.35), transparent 45%, rgb(13 27 42 / 0.6));
-  mix-blend-mode: soft-light;
-}
-.fx-bars::before,
-.fx-bars::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  height: 7%;
-  background: var(--navy);
-}
-.fx-bars::before {
-  top: 0;
-}
-.fx-bars::after {
-  bottom: 0;
-}
-.fx-grid {
-  margin: 0 6%;
-  border-inline: 1px solid rgb(224 196 138 / 0.7);
-  background-image:
-    repeating-linear-gradient(to right, rgb(201 169 110 / 0.13) 0 calc(100% / 12 - 6px), transparent calc(100% / 12 - 6px) calc(100% / 12)),
-    repeating-linear-gradient(to bottom, transparent 0 calc(12.5% - 1px), rgb(224 196 138 / 0.35) calc(12.5% - 1px) 12.5%);
-}
-.fx-switch {
-  border-color: rgb(245 240 232 / 0.4);
-  color: var(--on-dark-muted);
-  text-decoration: line-through;
-}
-.fx-switch[aria-checked="true"] {
-  border-color: var(--gold);
-  background: var(--gold);
-  color: var(--navy);
-  text-decoration: none;
-}
-.fx-trace-line {
-  stroke-dasharray: 1;
-}
-
-/* The scene under the playhead. */
-.scene .playing-dot {
-  opacity: 0.25;
-}
-.scene[data-playing] {
-  border-color: var(--gold-ink);
-}
-.scene[data-playing] .playing-dot {
-  opacity: 1;
-  color: var(--gold-ink);
-}
-.scene.bg-navy[data-playing] {
-  border-color: var(--gold);
-}
-.scene.bg-navy[data-playing] .playing-dot {
-  color: var(--gold-light);
-}
-
-/* Film grain + scanlines over everything, combined opacity under 4%. */
-.texture {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image:
-    repeating-linear-gradient(to bottom, transparent 0 2px, var(--ivory) 2px 3px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .96 0 0 0 0 .94 0 0 0 0 .91 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Subtitle being keyed in. Text is always in the DOM; only its reveal is animated. */
-.keyed-line {
-  position: relative;
-  display: inline-block;
-  white-space: nowrap;
-}
-.keyed {
-  display: inline-block;
-}
-/* The caret sits on the wrapper so the reveal's clip-path doesn't hide it. */
-.keyed-line::after {
-  content: "";
-  position: absolute;
-  top: 10%;
-  bottom: 10%;
-  left: 0;
-  width: 0.5ch;
-  background: var(--gold-light);
-  opacity: 0;
-}
-
-@keyframes key-in {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
+@keyframes marquee {
   to {
-    clip-path: inset(0 0 0 0);
+    transform: translateX(calc(-50% - 0.625rem));
   }
 }
-@keyframes key-caret {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  99% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(calc(var(--chars) * 1ch));
-    opacity: 0;
-  }
-}
-@keyframes trace-draw {
-  from {
-    stroke-dashoffset: 1;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes pad-in {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes wave {
-  50% {
-    transform: scaleY(0.35);
-  }
-}
-@keyframes cue-in {
-  from {
-    transform: translateY(100%);
-  }
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes whip-in {
-  from {
-    transform: translateX(45%);
-    filter: blur(14px);
-    opacity: 0.4;
-  }
-  to {
-    transform: none;
-    filter: none;
-    opacity: 1;
-  }
-}
-@keyframes dissolve-out {
-  from {
-    opacity: 1;
-    visibility: visible;
-  }
-  to {
-    opacity: 0;
-    visibility: visible;
-  }
-}
-@keyframes roll-up {
-  from {
-    transform: translateY(3rem);
-    opacity: 0;
-  }
-}
-@keyframes smash {
-  0%,
-  99% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-@keyframes appear-late {
-  0%,
-  99% {
-    visibility: hidden;
-  }
-  100% {
-    visibility: visible;
-  }
-}
-@keyframes rec-blink {
-  50% {
-    opacity: 0.25;
-  }
-}
-@keyframes marker-in {
-  0% {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  12%,
-  80% {
-    opacity: 1;
-    transform: none;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-@keyframes marker-fade {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  15%,
-  80% {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .keyed {
-    animation: key-in calc(var(--chars) * 55ms) steps(var(--chars)) 600ms both;
-  }
-  .keyed-line::after {
-    animation: key-caret calc(var(--chars) * 55ms) steps(var(--chars)) 600ms both;
-  }
-  .rec-dot {
-    animation: rec-blink 1.6s steps(1) infinite;
-  }
-  .fx-preview[data-robotics] .fx-trace-line {
-    animation: trace-draw 900ms ease-out calc(var(--i, 0) * 70ms) both;
-  }
-  .fx-preview[data-robotics] .fx-trace-pad {
-    animation: pad-in 200ms linear 900ms both;
-  }
-  .jcut-cue[data-shown] {
-    animation: cue-in 220ms ease-out both;
-  }
-  .jcut-cue[data-shown] .jcut-bar {
-    animation: wave 900ms ease-in-out calc(var(--i) * -100ms) infinite;
-  }
-  [data-transition="j-cut"][data-cut="in"] > [data-visuals] {
-    animation: fade-in 120ms linear both;
-  }
-  /* Match cut: the bin shows once the travelling frame has landed. */
-  [data-transition="match-cut"][data-cut="in"] [data-visuals] {
-    animation: fade-in 200ms linear 480ms both;
-  }
-  [data-transition="whip-pan"][data-cut="in"] [data-visuals] {
-    animation: whip-in 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  }
-  [data-transition="whip-pan"] {
-    overflow-x: clip;
-  }
-  [data-transition="cross-dissolve"][data-cut="in"]::before {
-    animation: dissolve-out 800ms linear both;
-  }
-  [data-transition="cross-dissolve"][data-cut="in"] [data-visuals] {
-    animation: fade-in 800ms linear both;
-  }
-  [data-transition="roll-credits"][data-cut="in"] .credit {
-    animation: roll-up 700ms cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i) * 90ms) both;
-  }
-  .smash {
-    animation: smash 260ms steps(1) both;
-  }
-  [data-transition="smash-cut"][data-cut="in"] [data-visuals] {
-    animation: appear-late 260ms steps(1) both;
-  }
-  .marker {
-    animation: marker-in 1.8s ease both;
-  }
-}
-
+/* Without the animation the strip scrolls by hand instead. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .jcut-cue[data-shown],
-  [data-transition="j-cut"][data-cut="in"] > [data-visuals],
-  [data-transition="match-cut"][data-cut="in"] [data-visuals],
-  [data-transition="whip-pan"][data-cut="in"] [data-visuals],
-  [data-transition="cross-dissolve"][data-cut="in"] [data-visuals],
-  [data-transition="roll-credits"][data-cut="in"] [data-visuals],
-  [data-transition="smash-cut"][data-cut="in"] [data-visuals] {
-    animation: fade-in 300ms linear both;
+  .marquee {
+    overflow-x: auto;
+    mask-image: none;
   }
-  [data-transition="cross-dissolve"][data-cut="in"]::before {
-    animation: dissolve-out 300ms linear both;
-  }
-  /* Cuts become a plain fade. */
-  [data-transition="hard-cut"] {
-    transition: background-color 300ms linear;
-  }
-  [data-transition="hard-cut"] > * {
-    transition: opacity 300ms linear;
-  }
+}
+html:not(.js) .marquee {
+  overflow-x: auto;
+  mask-image: none;
+}
 
-  .marker {
-    animation: marker-fade 1.8s linear both;
-  }
+/* Horizontal project showcase. */
+.showcase {
+  /* Without paint containment, mobile Chrome widens the layout viewport to fit the row. */
+  contain: paint;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.showcase::-webkit-scrollbar {
+  display: none;
+}
+.showcase > * {
+  scroll-snap-align: start;
+}
+
+/* Modal dialogs. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+dialog::backdrop {
+  background: rgb(13 27 42 / 0.82);
 }
