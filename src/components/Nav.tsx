@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { navLinks } from "@/content/nav";
 import { site } from "@/content/site";
 import { ArrowUpRightIcon, CloseIcon, MenuIcon } from "./icons";
@@ -9,9 +9,37 @@ import { ArrowUpRightIcon, CloseIcon, MenuIcon } from "./icons";
 export function Nav() {
   const menu = useRef<HTMLDetailsElement>(null);
   const close = () => menu.current?.removeAttribute("open");
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!("IntersectionObserver" in window)) return;
+    // Past the hero: the header turns translucent and tightens (CSS: .site-header).
+    const hero = document.getElementById("top");
+    const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) * 16 || 72;
+    const heroIO = new IntersectionObserver(([e]) => setScrolled(!e.isIntersecting), { rootMargin: `-${navH}px 0px 0px 0px` });
+    if (hero) heroIO.observe(hero);
+
+    // Active section: whichever one crosses the band just above the middle of the screen.
+    const sections = navLinks.map((l) => document.querySelector(l.href)).filter(Boolean) as Element[];
+    const visible = new Set<string>();
+    const sectionIO = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id);
+        const current = navLinks.find((l) => visible.has(l.href.slice(1)));
+        setActive(current ? current.href : null);
+      },
+      { rootMargin: "-40% 0px -55% 0px" },
+    );
+    sections.forEach((s) => sectionIO.observe(s));
+    return () => {
+      heroIO.disconnect();
+      sectionIO.disconnect();
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line-on-light bg-ivory-warm/95 backdrop-blur-sm">
+    <header className="site-header sticky top-0 z-50" data-scrolled={scrolled || undefined}>
       <nav aria-label="Main" className="mx-auto flex h-[var(--nav-h)] max-w-[90rem] items-center justify-between gap-6 px-5 md:px-10">
         <a href="#top" className="text-lg font-extrabold tracking-[-0.02em] sm:text-xl">
           ahmed<span className="text-gold-ink">/</span>mobasher
@@ -20,7 +48,11 @@ export function Nav() {
         <ul className="hidden items-center gap-1 lg:flex">
           {navLinks.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="block border border-transparent px-3 py-2 text-[0.9375rem] hover:border-navy">
+              <a
+                href={l.href}
+                aria-current={active === l.href ? "true" : undefined}
+                className="u-draw block px-3 py-2 text-[0.9375rem] [--u-bottom:4px] [--u-inset:0.75rem]"
+              >
                 {l.label}
               </a>
             </li>
@@ -40,7 +72,12 @@ export function Nav() {
             <ul className="absolute inset-x-0 top-[var(--nav-h)] h-[calc(100svh-var(--nav-h))] overflow-y-auto bg-ivory-warm px-5 pb-6">
               {navLinks.map((l) => (
                 <li key={l.href} className="border-b border-line-on-light">
-                  <a href={l.href} onClick={close} className="flex items-center justify-between py-4 text-2xl font-bold tracking-[-0.02em]">
+                  <a
+                    href={l.href}
+                    onClick={close}
+                    aria-current={active === l.href ? "true" : undefined}
+                    className="flex items-center justify-between py-4 text-2xl font-bold tracking-[-0.02em] aria-[current]:text-gold-ink"
+                  >
                     {l.label}
                   </a>
                 </li>

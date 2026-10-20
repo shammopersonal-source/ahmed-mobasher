@@ -4,6 +4,7 @@ import { Certificates } from "@/components/Certificates";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { Motion } from "@/components/Motion";
 import { Nav } from "@/components/Nav";
 import { Reviews } from "@/components/Reviews";
 import { Services } from "@/components/Services";
@@ -27,6 +28,7 @@ export default function Page() {
         <Contact />
       </main>
       <Footer />
+      <Motion />
     </>
   );
 }

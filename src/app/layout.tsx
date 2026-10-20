@@ -79,7 +79,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${cabinet.variable} ${jetbrains.variable}`}>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* "js" enables the motion's hidden-before-reveal states. Failsafe: if the page's
+            scripts haven't started within 3.5s, "motion-off" shows everything. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "var d=document.documentElement;d.classList.add('js');setTimeout(function(){if(!d.classList.contains('motion-ready'))d.classList.add('motion-off')},3500)",
+          }}
+        />
       </head>
       <body>
         {children}

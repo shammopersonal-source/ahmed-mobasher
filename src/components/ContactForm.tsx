@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { site } from "@/content/site";
 import { CheckIcon } from "./icons";
 
 type Status = { state: "idle" } | { state: "sending" } | { state: "sent" } | { state: "error"; message: string };
 
-const field = "mt-2 w-full border-2 border-navy/20 bg-ivory px-4 py-3.5 text-lg text-navy placeholder:text-on-light-faint focus:border-navy focus:outline-none";
+const field =
+  "mt-2 w-full border-2 border-navy/20 bg-ivory px-4 py-3.5 text-lg text-navy transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-on-light-faint hover:border-navy/40 focus:border-navy focus:shadow-[0_0_0_3px_rgb(201_169_110_/_0.35)] focus:outline-none";
 
 /**
  * Posts to /api/contact. Without JS the browser submits the same form normally and the
@@ -50,12 +51,18 @@ export function ContactForm() {
   if (status.state === "sent") {
     return (
       <div className="flex min-h-[30rem] flex-col items-start justify-center gap-5 p-6 md:p-10" role="status">
-        <span className="flex h-14 w-14 items-center justify-center bg-gold">
+        <span className="sent-pop flex h-14 w-14 items-center justify-center bg-gold">
           <CheckIcon width={26} height={26} />
         </span>
-        <h3 className="text-4xl font-extrabold tracking-[-0.035em]">Message received.</h3>
-        <p className="max-w-[42ch] text-lg leading-relaxed text-on-light-muted">{site.form.delivered}</p>
-        <p className="mono text-on-light-faint">{site.contact.responseTime}</p>
+        <h3 className="sent-rise text-4xl font-extrabold tracking-[-0.035em]" style={{ "--delay": "120ms" } as CSSProperties}>
+          Message received.
+        </h3>
+        <p className="sent-rise max-w-[42ch] text-lg leading-relaxed text-on-light-muted" style={{ "--delay": "190ms" } as CSSProperties}>
+          {site.form.delivered}
+        </p>
+        <p className="sent-rise mono text-on-light-faint" style={{ "--delay": "260ms" } as CSSProperties}>
+          {site.contact.responseTime}
+        </p>
         <button
           type="button"
           onClick={() => {
@@ -114,8 +121,9 @@ export function ContactForm() {
         <p className="mono text-on-light-faint" aria-live="polite">
           {sending ? "Sending…" : site.contact.responseTime}
         </p>
-        <button type="submit" className="btn btn-navy notch" disabled={sending}>
+        <button type="submit" className="btn btn-navy notch relative overflow-hidden disabled:cursor-progress" disabled={sending} aria-busy={sending}>
           {sending ? "Sending…" : "Send message"}
+          {sending ? <span aria-hidden className="send-bar" /> : null}
         </button>
       </div>
       {status.state === "error" ? (

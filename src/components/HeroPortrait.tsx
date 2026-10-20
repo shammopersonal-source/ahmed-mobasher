@@ -79,7 +79,7 @@ export function HeroPortrait() {
       {/* Offset block behind the card */}
       <div aria-hidden className="absolute inset-0 translate-x-4 translate-y-5 bg-navy md:translate-x-6 md:translate-y-7" style={{ "--z": "-20px" } as CSSProperties} />
 
-      <figure className="absolute inset-0 m-0 overflow-hidden border border-line bg-linear-to-b from-navy-light to-navy-mid">
+      <figure className="hero-reveal absolute inset-0 m-0 overflow-hidden border border-line bg-linear-to-b from-navy-light to-navy-mid">
         {SHOTS.map((shot, i) =>
           i === 0 || ready ? (
             <div key={shot.name} className="hero-shot absolute inset-0" data-on={i === index || undefined} aria-hidden={i !== index}>
@@ -87,16 +87,26 @@ export function HeroPortrait() {
             </div>
           ) : null,
         )}
-        <figcaption className="mono absolute bottom-4 left-1/2 -translate-x-1/2 bg-navy px-3 py-2 whitespace-nowrap text-ivory">{site.tagline}</figcaption>
+        <figcaption className="hero-tagline mono absolute bottom-4 left-1/2 z-[1] -translate-x-1/2 bg-navy px-3 py-2 whitespace-nowrap text-ivory">{site.tagline}</figcaption>
       </figure>
 
       {/* Stat chips float above the card */}
       <div className="tilt-float absolute -top-4 -right-2 bg-gold px-4 py-3 md:top-10 md:-right-5" style={{ "--z": "70px" } as CSSProperties}>
-        <b className="block text-2xl leading-none font-extrabold tracking-[-0.03em] md:text-[1.875rem]">30+</b>
+        <b className="block text-2xl leading-none font-extrabold tracking-[-0.03em] md:text-[1.875rem]">
+          <span className="count-num" style={{ "--to": 30 } as CSSProperties}>
+            <span>30</span>
+          </span>
+          +
+        </b>
         <span className="mono">Projects done</span>
       </div>
       <div className="tilt-float absolute bottom-16 -left-2 border-2 border-navy bg-ivory px-4 py-3 md:-left-7" style={{ "--z": "50px" } as CSSProperties}>
-        <b className="block text-2xl leading-none font-extrabold tracking-[-0.03em] md:text-[1.875rem]">5+</b>
+        <b className="block text-2xl leading-none font-extrabold tracking-[-0.03em] md:text-[1.875rem]">
+          <span className="count-num" style={{ "--to": 5 } as CSSProperties}>
+            <span>5</span>
+          </span>
+          +
+        </b>
         <span className="mono">Years freelancing</span>
       </div>
 

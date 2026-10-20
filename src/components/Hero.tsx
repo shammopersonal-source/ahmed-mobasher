@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { site } from "@/content/site";
 import { HeroPortrait } from "./HeroPortrait";
 import { ArrowRightIcon, FiverrIcon, UpworkIcon } from "./icons";
@@ -24,7 +25,7 @@ export function Hero() {
 
         <ul className="mt-8 grid grid-cols-2 border-t-2 border-navy sm:grid-cols-4 md:mt-10 md:grid-cols-2 xl:grid-cols-4" aria-label="What I do">
           {site.roles.map((r, i) => (
-            <li key={r} className="pt-4 pr-4 pb-3">
+            <li key={r} className="hero-rise pt-4 pr-4 pb-3" style={{ "--delay": `${250 + i * 70}ms` } as CSSProperties}>
               <span className="mono text-on-light-faint">{String(i + 1).padStart(2, "0")}</span>
               <span className="block text-xl font-bold tracking-[-0.01em] md:text-[1.375rem]">{r}</span>
             </li>
@@ -32,16 +33,16 @@ export function Hero() {
         </ul>
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap md:mt-auto md:pt-10">
-          <a href="#services" className="btn btn-gold col-span-2">
+          <a href="#services" style={{ "--delay": "600ms" } as CSSProperties} className="hero-rise btn btn-gold col-span-2">
             See what I do <ArrowRightIcon width={16} height={16} />
           </a>
-          <a href="#contact" className="btn btn-outline col-span-2">
+          <a href="#contact" style={{ "--delay": "670ms" } as CSSProperties} className="hero-rise btn btn-outline col-span-2">
             Get in touch
           </a>
-          <a href={site.links.upwork} target="_blank" rel="noopener noreferrer" aria-label="Hire on Upwork" className="btn btn-market">
+          <a href={site.links.upwork} target="_blank" rel="noopener noreferrer" aria-label="Hire on Upwork" style={{ "--delay": "740ms" } as CSSProperties} className="hero-rise btn btn-market">
             <UpworkIcon width={22} height={22} />
           </a>
-          <a href={site.links.fiverr} target="_blank" rel="noopener noreferrer" aria-label="Hire on Fiverr" className="btn btn-market">
+          <a href={site.links.fiverr} target="_blank" rel="noopener noreferrer" aria-label="Hire on Fiverr" style={{ "--delay": "810ms" } as CSSProperties} className="hero-rise btn btn-market">
             <FiverrIcon />
           </a>
         </div>

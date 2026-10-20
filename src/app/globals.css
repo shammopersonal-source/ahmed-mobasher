@@ -238,3 +238,354 @@ html:has(dialog[open]) {
 dialog::backdrop {
   background: rgb(13 27 42 / 0.82);
 }
+
+/* ───────────────────────── Motion ─────────────────────────
+   Calm, once-only motion. Rules of thumb:
+   - Only transform/translate/scale and opacity move (the skill rings also sweep a
+     stroke, which is paint-only).
+   - Nothing is hidden unless JS is running (html.js), motion is allowed, and the
+     failsafe in layout.tsx hasn't fired (html.motion-off).
+   - The hero headline and portrait are never hidden: they are the LCP candidates.
+   - The certificate strip above is deliberately left untouched. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --rise: 16px;
+  --step: 70ms;
+}
+@media (max-width: 767.98px) {
+  :root {
+    --rise: 10px;
+  }
+}
+
+@property --n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --p {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes settle {
+  from {
+    transform: scale(1.04);
+  }
+}
+@keyframes unveil {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes count-up {
+  from {
+    --n: 0;
+  }
+  to {
+    --n: var(--to);
+  }
+}
+@keyframes ring-fill {
+  from {
+    --p: 0;
+  }
+  to {
+    --p: var(--to);
+  }
+}
+@keyframes bar-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(0.9);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* Count-up numbers: the real number stays in the DOM (for no-JS, screen readers and
+   reduced motion); while motion runs it is transparent and a CSS counter draws over it. */
+.count-num,
+.ring-num {
+  position: relative;
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+.count-num::before,
+.ring-num::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--count-color, var(--navy));
+}
+
+/* Hero portrait veil (only ever visible during the load animation). */
+.hero-reveal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--navy);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Skill rings. --to is the final value (0–100), set inline. */
+.ring-arc {
+  --p: var(--to);
+  stroke-dasharray: 175.93;
+  stroke-dashoffset: calc(175.93 * (1 - var(--p) / 100));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. Hero, on load, once. The h1 is untouched. */
+  .js .hero-rise {
+    animation: rise-in 650ms var(--ease-out) var(--delay, 0ms) both;
+  }
+  .js .hero-reveal .hero-shot:first-child img {
+    transform-origin: 50% 100%;
+    animation: settle 1100ms var(--ease-out) both;
+  }
+  .js .hero-reveal::after {
+    animation: unveil 900ms var(--ease-out) both;
+  }
+  .js .hero-tagline {
+    animation: fade-in 600ms var(--ease-out) 950ms both;
+  }
+  .js:not(.motion-off) .count-num > span {
+    opacity: 0;
+  }
+  .js:not(.motion-off) .count-num::before {
+    content: counter(n) / "";
+    counter-reset: n var(--n);
+    animation: count-up 1200ms var(--ease-out) var(--count-delay, 400ms) both;
+  }
+
+  /* 2. Scroll reveals, once per group. --b offsets a group (content waits for its
+     heading), --i is the item's place in the stagger. */
+  .js:not(.motion-off) [data-reveal-group]:not([data-shown]) [data-reveal] {
+    opacity: 0;
+    translate: 0 var(--rise);
+  }
+  [data-reveal] {
+    transition:
+      opacity 650ms var(--ease-out) calc((var(--b, 0) + var(--i, 0)) * var(--step)),
+      translate 650ms var(--ease-out) calc((var(--b, 0) + var(--i, 0)) * var(--step));
+  }
+
+  /* Skill rings: all four start together once the cards are in view. */
+  .js:not(.motion-off) [data-reveal-group]:not([data-shown]) .ring-arc {
+    --p: 0;
+  }
+  .js:not(.motion-off) [data-reveal-group]:not([data-shown]) .ring-num::before {
+    --n: 0;
+  }
+  [data-reveal-group][data-shown] .ring-arc {
+    /* Builds speed, then lands smoothly — no overshoot. */
+    animation: ring-fill 1700ms cubic-bezier(0.7, 0, 0.2, 1) 350ms both;
+  }
+  .js:not(.motion-off) [data-reveal-group][data-shown] .ring-num::before {
+    animation: count-up 1700ms cubic-bezier(0.7, 0, 0.2, 1) 350ms both;
+  }
+}
+
+/* Skill-ring numbers use the same counter trick, but only run once revealed. */
+@media (prefers-reduced-motion: no-preference) {
+  .js:not(.motion-off) .ring-num > span {
+    opacity: 0;
+  }
+  .js:not(.motion-off) .ring-num::before {
+    content: counter(n) / "";
+    counter-reset: n var(--n);
+    --n: var(--to);
+  }
+}
+
+/* 3. Hover and focus. Hover only on real pointers; focus-visible everywhere. */
+.lift {
+  transition:
+    transform 450ms var(--ease-out),
+    box-shadow 450ms var(--ease-out),
+    border-color 450ms var(--ease-out);
+}
+[data-reveal].lift {
+  transition:
+    opacity 650ms var(--ease-out) calc((var(--b, 0) + var(--i, 0)) * var(--step)),
+    translate 650ms var(--ease-out) calc((var(--b, 0) + var(--i, 0)) * var(--step)),
+    transform 450ms var(--ease-out),
+    box-shadow 450ms var(--ease-out),
+    border-color 450ms var(--ease-out);
+}
+.lift:focus-within {
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+@media (hover: hover) {
+  .lift:hover {
+    box-shadow: inset 0 0 0 1px var(--gold);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lift:focus-within {
+    transform: translateY(-3px);
+  }
+  @media (hover: hover) {
+    .lift:hover {
+      transform: translateY(-3px);
+    }
+  }
+}
+.lift-row:focus-within {
+  border-bottom-color: var(--gold-dark);
+}
+@media (hover: hover) {
+  .lift-row:hover {
+    border-bottom-color: var(--gold-dark);
+  }
+}
+
+/* Text links: a gold underline draws in from the left. */
+.u-draw {
+  position: relative;
+}
+.u-draw::after {
+  content: "";
+  position: absolute;
+  left: var(--u-inset, 0);
+  right: var(--u-inset, 0);
+  bottom: var(--u-bottom, -2px);
+  height: 1.5px;
+  background: var(--gold-dark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms var(--ease-out);
+}
+.dark .u-draw::after {
+  background: var(--gold);
+}
+.u-draw:focus-visible::after,
+.u-draw[aria-current]::after {
+  transform: scaleX(1);
+}
+@media (hover: hover) {
+  .u-draw:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Buttons: smoother fill change and a small arrow nudge. */
+.btn {
+  transition:
+    background-color 300ms var(--ease-out),
+    border-color 300ms var(--ease-out),
+    color 300ms var(--ease-out),
+    filter 300ms var(--ease-out);
+}
+.btn > svg:last-child {
+  transition: transform 350ms var(--ease-out);
+}
+.btn-gold:focus-visible {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
+}
+.btn-navy:focus-visible {
+  background: var(--navy-light);
+  border-color: var(--navy-light);
+}
+.btn-outline:focus-visible {
+  background: var(--navy);
+  color: var(--ivory);
+}
+.btn-market:focus-visible {
+  border-color: var(--navy);
+}
+.nudge {
+  transition: transform 350ms var(--ease-out);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn:not(.btn-market):focus-visible > svg:last-child,
+  .nudge-parent:focus-visible .nudge {
+    transform: translateX(3px);
+  }
+  @media (hover: hover) {
+    .btn:not(.btn-market):hover > svg:last-child,
+    .nudge-parent:hover .nudge {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* 4. Header: past the hero it turns translucent with blur and tightens (by scaling its
+   background layer and lifting its contents — no layout change). */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ivory-warm);
+  border-bottom: 1px solid var(--line-on-light);
+  transform-origin: top;
+  transition:
+    transform 500ms var(--ease-out),
+    background-color 500ms var(--ease-out),
+    box-shadow 500ms var(--ease-out);
+}
+.site-header[data-scrolled]::before {
+  background: rgb(237 232 220 / 0.86);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 28px -18px rgb(13 27 42 / 0.45);
+}
+.site-header > nav {
+  transition: transform 500ms var(--ease-out);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-header[data-scrolled]:not(:has(details[open]))::before {
+    transform: scaleY(0.86);
+  }
+  .site-header[data-scrolled]:not(:has(details[open])) > nav {
+    transform: translateY(-5px);
+  }
+}
+
+/* 6. Contact form. */
+.send-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--gold);
+  transform-origin: left;
+  transform: scaleX(0.9);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .send-bar {
+    animation: bar-fill 2400ms var(--ease-out) both;
+  }
+  .js .sent-rise {
+    animation: rise-in 600ms var(--ease-out) var(--delay, 0ms) both;
+  }
+  .js .sent-pop {
+    animation: pop-in 500ms var(--ease-out) both;
+  }
+}

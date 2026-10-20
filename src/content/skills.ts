@@ -1,4 +1,6 @@
-// Skills — from the previous site's Skills and Services sections (percentages dropped).
+// Skills — from the previous site's Skills and Services sections.
+// `level` is the number the ring counts up to (set by the user on 2026-10-20). Leave it
+// out and the ring fills without a number.
 export type Skill = {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export type Skill = {
   items: string[];
   note: string;
   tag?: string;
+  level?: number;
 };
 
 export const skillsIntro = { label: "Skills", title: "What I work with" };
@@ -14,6 +17,7 @@ export const skillsIntro = { label: "Skills", title: "What I work with" };
 export const skills: Skill[] = [
   {
     id: "video",
+    level: 95,
     name: "Video",
     tools: ["Premiere Pro"],
     items: ["Editing, from raw footage to cinematic storytelling", "Motion graphics", "Color grading", "AI-driven editing"],
@@ -21,6 +25,7 @@ export const skills: Skill[] = [
   },
   {
     id: "design",
+    level: 97,
     name: "Design",
     tools: ["Illustrator", "Figma"],
     items: ["Logos and full brand systems", "Posters, social media kits, presentations", "UI for web and apps", "Photo manipulation"],
@@ -28,6 +33,7 @@ export const skills: Skill[] = [
   },
   {
     id: "development",
+    level: 100,
     name: "Development",
     tools: ["HTML / CSS / JS", "React / Next.js", "Flutter"],
     items: ["Clean, responsive websites built from scratch", "Cross-platform mobile apps"],

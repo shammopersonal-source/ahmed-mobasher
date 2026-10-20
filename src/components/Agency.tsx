@@ -1,7 +1,7 @@
 import { site } from "@/content/site";
 import { ArrowUpRightIcon } from "./icons";
 import { Picture } from "./Picture";
-import { SectionHead, shell } from "./SectionHead";
+import { reveal, revealGroup, SectionHead, shell } from "./SectionHead";
 
 const { agency } = site;
 
@@ -19,11 +19,12 @@ export function Agency() {
               <Picture name="startup-solution-logo-dark" alt={`${agency.name} logo`} className="h-auto w-full" />
             </a>
           }
+          reveal
         />
 
-        <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-5">
-          <p className="text-xl leading-snug text-on-light-muted md:text-2xl lg:col-span-6">{agency.description}</p>
-          <div className="flex flex-col items-start gap-4 lg:col-span-5 lg:col-start-8 lg:items-end">
+        <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-5" {...revealGroup(2)}>
+          <p className="text-xl leading-snug text-on-light-muted md:text-2xl lg:col-span-6" {...reveal(0)}>{agency.description}</p>
+          <div className="flex flex-col items-start gap-4 lg:col-span-5 lg:col-start-8 lg:items-end" {...reveal(1)}>
             <p className="mono border-2 border-navy px-3 py-2">{agency.offer}</p>
             <a href={agency.url} target="_blank" rel="noopener" className="btn btn-navy notch">
               Visit {agency.name} <ArrowUpRightIcon width={14} height={14} />
@@ -31,9 +32,9 @@ export function Agency() {
           </div>
         </div>
 
-        <ol className="mt-12 grid gap-px border border-line-on-light bg-[var(--line-on-light)] md:mt-16 lg:grid-cols-3">
+        <ol className="mt-12 grid gap-px border border-line-on-light bg-[var(--line-on-light)] md:mt-16 lg:grid-cols-3" {...revealGroup()}>
           {agency.services.map((s, i) => (
-            <li key={s.name} className="bg-ivory p-6 md:p-8">
+            <li key={s.name} className="lift bg-ivory p-6 md:p-8" {...reveal(i)}>
               <span className="mono text-gold-ink">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="mt-4 text-2xl font-extrabold tracking-[-0.025em]">{s.name}</h3>
               <p className="mt-3 leading-relaxed text-on-light-muted">{s.text}</p>

@@ -30,7 +30,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               {navLinks.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="text-lg text-on-dark-muted hover:text-ivory">
+                  <a href={l.href} className="u-draw text-lg text-on-dark-muted transition-colors duration-300 hover:text-ivory focus-visible:text-ivory">
                     {l.label}
                   </a>
                 </li>
@@ -47,7 +47,7 @@ export function Footer() {
                     target={s.href.startsWith("mailto:") ? undefined : "_blank"}
                     rel="noopener noreferrer"
                     aria-label={s.label}
-                    className="flex h-11 min-w-11 items-center justify-center border border-line px-3 text-on-dark-muted hover:border-gold hover:text-ivory"
+                    className="flex h-11 min-w-11 items-center justify-center border border-line px-3 text-on-dark-muted transition-colors duration-300 hover:border-gold hover:text-ivory focus-visible:border-gold focus-visible:text-ivory"
                   >
                     {s.icon}
                   </a>
@@ -59,8 +59,8 @@ export function Footer() {
 
         <div className="mono mt-16 flex flex-col justify-between gap-4 border-t border-line pt-6 text-on-dark-faint md:flex-row">
           <span>{site.copyright}</span>
-          <a href={site.agency.url} target="_blank" rel="noopener" className="flex items-center gap-1.5 text-gold hover:text-gold-light">
-            Founder of {site.agency.name} — Digital Agency <ArrowUpRightIcon width={12} height={12} />
+          <a href={site.agency.url} target="_blank" rel="noopener" className="nudge-parent flex items-center gap-1.5 text-gold transition-colors duration-300 hover:text-gold-light focus-visible:text-gold-light">
+            Founder of {site.agency.name} — Digital Agency <ArrowUpRightIcon width={12} height={12} className="nudge" />
           </a>
         </div>
       </div>
