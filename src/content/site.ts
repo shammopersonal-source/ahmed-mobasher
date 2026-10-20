@@ -63,5 +63,5 @@ export const site = {
     intro: "Have a project in mind? A brand waiting to be born, a story waiting to be edited, or a website that deserves to exist? Let us talk.",
     delivered: "Ahmed will review your message personally and get back to you shortly. Let us build something meaningful together.",
   },
-  copyright: "© 2026 Ahmed Mobasher. All Rights Reserved.",
+  copyright: "© 2025 Ahmed Mobasher. All Rights Reserved.",
 } as const;
