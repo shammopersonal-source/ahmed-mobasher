@@ -25,5 +25,8 @@
     "subset-font": "^2.9.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }
