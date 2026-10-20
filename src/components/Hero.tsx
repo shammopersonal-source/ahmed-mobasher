@@ -4,7 +4,7 @@ import { ArrowRightIcon, FiverrIcon, UpworkIcon } from "./icons";
 
 export function Hero() {
   return (
-    <section id="top" aria-labelledby="hero-title" className="mx-auto grid max-w-[90rem] gap-14 px-5 pt-8 pb-20 md:grid-cols-12 md:gap-5 md:px-10 md:pt-12 md:pb-24">
+    <section id="top" aria-labelledby="hero-title" className="mx-auto grid max-w-[90rem] gap-12 px-5 pt-8 pb-20 md:grid-cols-12 md:gap-5 md:px-10 md:pt-12 md:pb-24">
       <div className="flex flex-col md:col-span-7">
         <ul className="mono flex flex-wrap gap-2.5">
           <li className="flex items-center gap-2 border border-line-on-light bg-ivory px-2.5 py-2">
@@ -22,7 +22,7 @@ export function Hero() {
         </h1>
         <p className="sr-only">{site.role}. {site.summary}</p>
 
-        <ul className="mt-8 grid grid-cols-2 border-t-2 border-navy sm:grid-cols-4 md:mt-10" aria-label="What I do">
+        <ul className="mt-8 grid grid-cols-2 border-t-2 border-navy sm:grid-cols-4 md:mt-10 md:grid-cols-2 xl:grid-cols-4" aria-label="What I do">
           {site.roles.map((r, i) => (
             <li key={r} className="pt-4 pr-4 pb-3">
               <span className="mono text-on-light-faint">{String(i + 1).padStart(2, "0")}</span>
@@ -47,7 +47,8 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="mr-3 md:col-span-5 md:mr-6">
+      {/* On phones the photo comes first; from tablet up it sits to the right of the name. */}
+      <div className="order-first mr-3 md:order-none md:col-span-5 md:mr-6">
         <HeroPortrait />
       </div>
     </section>

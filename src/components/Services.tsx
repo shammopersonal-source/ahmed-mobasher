@@ -9,14 +9,16 @@ export function Services() {
         <SectionHead id="services" index="03" label={servicesIntro.label} title={servicesIntro.title} />
         <ol className="mt-12 border-t-2 border-navy md:mt-16">
           {services.map((s, i) => (
-            <li key={s.id} className="grid gap-4 border-b border-line-on-light py-8 md:grid-cols-12 md:gap-5 md:py-10">
-              <span className="mono pt-2 text-gold-ink md:col-span-1">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="text-[2.25rem] leading-[0.95] font-extrabold tracking-[-0.035em] md:col-span-5 md:text-5xl">{s.name}</h3>
-              <p className="text-lg leading-relaxed text-on-light-muted md:col-span-4">{s.text}</p>
-              <div className="md:col-span-2 md:justify-self-end">
+            <li key={s.id} className="grid gap-4 border-b border-line-on-light py-8 md:py-10 lg:grid-cols-12 lg:gap-5">
+              <span className="mono pt-2 text-gold-ink lg:col-span-1">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="text-[2.25rem] leading-[0.95] font-extrabold tracking-[-0.035em] md:text-5xl lg:col-span-5">{s.name}</h3>
+              <div className="lg:col-span-6">
+              <p className="max-w-[60ch] text-lg leading-relaxed text-on-light-muted">{s.text}</p>
+              <div className="mt-5">
                 <a href={`#contact`} data-format={s.format} className="btn btn-outline min-h-11 px-4 text-base whitespace-nowrap">
                   {s.cta} <ArrowUpRightIcon width={14} height={14} />
                 </a>
+              </div>
               </div>
             </li>
           ))}

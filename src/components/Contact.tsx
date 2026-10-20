@@ -17,8 +17,8 @@ export function Contact() {
     <section id="contact" aria-labelledby="contact-title" className="border-t-2 border-navy py-20 md:py-28">
       <div className={shell}>
         <SectionHead id="contact" index="08" label="Contact" title="Get in touch" />
-        <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-12 md:gap-5">
-          <div className="md:col-span-5">
+        <div className="mt-12 grid gap-10 md:mt-16 lg:grid-cols-12 lg:gap-5">
+          <div className="lg:col-span-5">
             <p className="text-xl leading-snug text-on-light-muted md:text-2xl">{site.form.intro}</p>
             <dl className="mt-8 border-t-2 border-navy">
               {details.map(({ icon: Icon, label, value, href }) => (
@@ -47,7 +47,7 @@ export function Contact() {
               </a>
             </div>
           </div>
-          <div className="border-2 border-navy bg-ivory-warm md:col-span-7">
+          <div className="border-2 border-navy bg-ivory-warm lg:col-span-7">
             <ContactForm />
           </div>
         </div>

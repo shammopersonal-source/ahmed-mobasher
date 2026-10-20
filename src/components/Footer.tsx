@@ -14,8 +14,8 @@ export function Footer() {
   return (
     <footer className="dark bg-navy text-ivory">
       <div className="mx-auto max-w-[90rem] px-5 pt-16 pb-10 md:px-10 md:pt-24">
-        <div className="grid gap-12 md:grid-cols-12 md:gap-5">
-          <div className="md:col-span-6">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
+          <div className="sm:col-span-2 lg:col-span-6">
             <p className="h-display text-[clamp(3rem,8vw,6.5rem)]">
               Let&apos;s build
               <br />
@@ -25,7 +25,7 @@ export function Footer() {
               Start a project <ArrowUpRightIcon width={14} height={14} />
             </a>
           </div>
-          <nav aria-label="Footer" className="md:col-span-3 md:col-start-8">
+          <nav aria-label="Footer" className="lg:col-span-3 lg:col-start-8">
             <p className="mono text-gold">Sections</p>
             <ul className="mt-4 space-y-2">
               {navLinks.map((l) => (
@@ -37,7 +37,7 @@ export function Footer() {
               ))}
             </ul>
           </nav>
-          <div className="md:col-span-2">
+          <div className="lg:col-span-2">
             <p className="mono text-gold">Elsewhere</p>
             <ul className="mt-4 flex flex-wrap gap-2">
               {socials.map((s) => (

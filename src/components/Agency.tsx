@@ -21,9 +21,9 @@ export function Agency() {
           }
         />
 
-        <div className="mt-10 grid gap-8 md:mt-14 md:grid-cols-12 md:gap-5">
-          <p className="text-xl leading-snug text-on-light-muted md:col-span-6 md:text-2xl">{agency.description}</p>
-          <div className="flex flex-col items-start gap-4 md:col-span-5 md:col-start-8 md:items-end">
+        <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-5">
+          <p className="text-xl leading-snug text-on-light-muted md:text-2xl lg:col-span-6">{agency.description}</p>
+          <div className="flex flex-col items-start gap-4 lg:col-span-5 lg:col-start-8 lg:items-end">
             <p className="mono border-2 border-navy px-3 py-2">{agency.offer}</p>
             <a href={agency.url} target="_blank" rel="noopener" className="btn btn-navy notch">
               Visit {agency.name} <ArrowUpRightIcon width={14} height={14} />
@@ -31,7 +31,7 @@ export function Agency() {
           </div>
         </div>
 
-        <ol className="mt-12 grid gap-px border border-line-on-light bg-[var(--line-on-light)] md:mt-16 md:grid-cols-3">
+        <ol className="mt-12 grid gap-px border border-line-on-light bg-[var(--line-on-light)] md:mt-16 lg:grid-cols-3">
           {agency.services.map((s, i) => (
             <li key={s.name} className="bg-ivory p-6 md:p-8">
               <span className="mono text-gold-ink">{String(i + 1).padStart(2, "0")}</span>
