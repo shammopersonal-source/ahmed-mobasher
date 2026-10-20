@@ -8,7 +8,6 @@ import { Nav } from "@/components/Nav";
 import { Reviews } from "@/components/Reviews";
 import { Services } from "@/components/Services";
 import { Skills } from "@/components/Skills";
-import { Work } from "@/components/Work";
 
 export default function Page() {
   return (
@@ -22,10 +21,9 @@ export default function Page() {
         <About />
         <Skills />
         <Services />
-        <Work />
+        <Reviews />
         <Agency />
         <Certificates />
-        <Reviews />
         <Contact />
       </main>
       <Footer />

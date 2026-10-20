@@ -14,9 +14,9 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="border-t-2 border-navy py-20 md:py-28">
+    <section id="contact" aria-labelledby="contact-title" className="py-20 md:py-28">
       <div className={shell}>
-        <SectionHead id="contact" index="08" label="Contact" title="Get in touch" />
+        <SectionHead id="contact" index="07" label="Contact" title="Get in touch" />
         <div className="mt-12 grid gap-10 md:mt-16 lg:grid-cols-12 lg:gap-5">
           <div className="lg:col-span-5">
             <p className="text-xl leading-snug text-on-light-muted md:text-2xl">{site.form.intro}</p>

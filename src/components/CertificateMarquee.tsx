@@ -14,7 +14,7 @@ function Card({ cert, onOpen, hidden }: { cert: Certificate; onOpen: (c: Certifi
         onClick={onOpen(cert)}
         tabIndex={hidden ? -1 : undefined}
         aria-haspopup="dialog"
-        className="group flex h-full flex-col border-2 border-navy bg-ivory transition-transform hover:-translate-y-1"
+        className="group flex h-full flex-col border-2 border-navy bg-ivory text-navy transition-transform hover:-translate-y-1"
       >
         <span className="block aspect-[1.41] overflow-hidden border-b-2 border-navy bg-ivory-deep">
           {cert.image ? (

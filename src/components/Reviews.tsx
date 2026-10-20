@@ -6,7 +6,7 @@ export function Reviews() {
   return (
     <section id="reviews" aria-labelledby="reviews-title" className="dark bg-navy py-20 text-ivory md:py-28">
       <div className={shell}>
-        <SectionHead id="reviews" index="07" label={reviewsIntro.label} title={reviewsIntro.title} dark />
+        <SectionHead id="reviews" index="04" label={reviewsIntro.label} title={reviewsIntro.title} dark />
         <ul className="mt-12 grid gap-5 md:mt-16 md:grid-cols-3">
           {reviews.map((r, i) => (
             <li key={r.id}>

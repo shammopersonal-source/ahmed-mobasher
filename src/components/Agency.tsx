@@ -7,7 +7,7 @@ const { agency } = site;
 
 export function Agency() {
   return (
-    <section id="agency" aria-labelledby="agency-title" className="border-t-2 border-navy bg-ivory py-20 md:py-28">
+    <section id="agency" aria-labelledby="agency-title" className="bg-ivory py-20 md:py-28">
       <div className={shell}>
         <SectionHead
           id="agency"

@@ -32,8 +32,8 @@ export function Hero() {
         </ul>
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap md:mt-auto md:pt-10">
-          <a href="#work" className="btn btn-gold col-span-2">
-            See the work <ArrowRightIcon width={16} height={16} />
+          <a href="#services" className="btn btn-gold col-span-2">
+            See what I do <ArrowRightIcon width={16} height={16} />
           </a>
           <a href="#contact" className="btn btn-outline col-span-2">
             Get in touch

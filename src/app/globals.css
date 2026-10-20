@@ -231,21 +231,6 @@ html:not(.js) .marquee {
   mask-image: none;
 }
 
-/* Horizontal project showcase. */
-.showcase {
-  /* Without paint containment, mobile Chrome widens the layout viewport to fit the row. */
-  contain: paint;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-}
-.showcase::-webkit-scrollbar {
-  display: none;
-}
-.showcase > * {
-  scroll-snap-align: start;
-}
-
 /* Modal dialogs. */
 html:has(dialog[open]) {
   overflow: hidden;

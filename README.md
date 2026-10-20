@@ -4,8 +4,8 @@ Ahmed Mobasher's portfolio. Next.js (App Router) · TypeScript · Tailwind CSS v
 Type: Cabinet Grotesk (Indian Type Foundry, via Fontshare) and JetBrains Mono for small
 labels, both self-hosted (`src/fonts/`).
 
-Sections: hero, About, Skills, Services, Work (horizontal showcase), Agency, Certificates
-(auto-scrolling strip), Reviews, Contact. The hero portrait rotates through three photos and
+Sections: hero, About, Skills, Services, Reviews, Agency, Certificates (auto-scrolling
+strip), Contact. A Work section was removed on 2026-10-20 (no recent projects to show). The hero portrait rotates through three photos and
 tilts toward the cursor on desktop (flat on touch and with reduced motion).
 
 ## Run it
@@ -26,7 +26,6 @@ All copy lives in `src/content/` — components only lay it out.
 | `about.ts` | About text and quick facts |
 | `skills.ts` | The four skill areas (tools and what he does); lists can grow |
 | `services.ts` | The three services |
-| `projects.ts` | Work. **Add a project by appending to the array.** Optional `video`, `images`, `client`, `result`, `quoteId` |
 | `reviews.ts` | Client testimonials |
 | `certificates.ts` | Certificates (image, story, details) |
 | `nav.ts` | Navigation links |
