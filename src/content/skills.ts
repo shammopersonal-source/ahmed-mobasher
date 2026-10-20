@@ -41,6 +41,7 @@ export const skills: Skill[] = [
   },
   {
     id: "robotics",
+    level: 72,
     name: "Robotics",
     tools: ["Python"],
     items: ["Robotics and automation"],
